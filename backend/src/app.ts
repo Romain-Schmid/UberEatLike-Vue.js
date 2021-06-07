@@ -1,4 +1,5 @@
 import express from 'express';
+<<<<<<< Updated upstream
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import Sensor from './models/sensor_models';
@@ -11,6 +12,9 @@ db.once('open', function() {
   console.log('CONNECTION')
 });
 
+=======
+import {Sensor} from './db';
+>>>>>>> Stashed changes
 
 const app = express();
 const port = 3000;
@@ -29,6 +33,7 @@ app
   })
   .catch(error => res.status(400).json({ error }));
 })
+<<<<<<< Updated upstream
 .get('/api/fonction/get/:id', (req, res) => {
   var idSensor = parseInt(req.params.id)
   Sensor.find({id : idSensor })
@@ -42,6 +47,20 @@ app
     }
 
   })
+=======
+.get('/api/fonction/2/:id', (req, res) => {
+  var findSensor =  Sensor.find({id: req.params.id});
+
+  findSensor.exec(function(err,result){
+    if(err)
+      res.status(400).json({ err });
+      
+    if(Object.keys(result).length === 0)
+      res.status(400).json({ message: "This sensor doesn't exist in the database" });
+    
+    res.status(201).json({ message: result})
+  });
+>>>>>>> Stashed changes
 });
 
 app.post('/api/fonction/add', urlencodedParser, (req, res) => {
