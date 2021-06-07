@@ -27,12 +27,9 @@ const Sensor = mongoose.model('Sensor', sensorSchema);
 
 const app = express();
 const port = 3000;
-
-// create application/json parser
-var jsonParser = bodyParser.json()
  
 // create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var urlencodedParser = express.urlencoded({ extended: true })
 
 app
 .get('/', (req, res) => {
