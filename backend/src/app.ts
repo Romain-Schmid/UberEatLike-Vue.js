@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
 
 mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -18,6 +19,12 @@ const sensors = [
 
 const app = express();
 const port = 3000;
+
+// create application/json parser
+var jsonParser = bodyParser.json()
+ 
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app
 .get('/', (req, res) => {
@@ -39,13 +46,13 @@ app
   }
 });
 
-app.post('/api/fonction/3', (req, res) => {
+app.post('/api/fonction/3', urlencodedParser, (req, res) => {
   const createSensor = {
     id : req.body.id,
     type : req.body.type,
     data : req.body.data
   }
-  res.send("New sensor add " + createSensor)
+  res.send("New sensor add " + createSensor.id + ", " + createSensor.type + ", " + createSensor.data)
 })
 
 app.listen(port, () => {
