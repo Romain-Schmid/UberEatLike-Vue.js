@@ -15,6 +15,7 @@ const sensors = [
    {id:3, type:'omega', datas:{a:1,b:2}},
 ]
 
+
 const app = express();
 const port = 3000;
 
@@ -30,9 +31,22 @@ app
 })
 .get('/api/fonction/2/:id', (req, res) => {
   var id = parseInt(req.params.id)-1
-  res.send(sensors[id])
-  res.sendStatus(200)
+  if (typeof sensors[id] === "undefined"){
+    res.sendStatus(404)
+  }
+  else{
+    res.send(sensors[id])
+  }
 });
+
+app.post('/api/fonction/3', (req, res) => {
+  const createSensor = {
+    id : req.body.id,
+    type : req.body.type,
+    data : req.body.data
+  }
+  res.send("New sensor add " + createSensor)
+})
 
 app.listen(port, () => {
   return console.log(`server is listening on ${port}`);
