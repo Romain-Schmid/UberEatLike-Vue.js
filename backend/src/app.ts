@@ -12,8 +12,13 @@ db.once('open', function() {
 
 const app = express();
 const port = 3000;
-app.get('/', (req, res) => {
+
+app
+.get('/', (req, res) => {
   res.send('Le Serveur est connecté mon bro');
+})
+.get('/RomainBG', (req, res) => {
+  res.send('Quel frappe');
 });
 
 app.get('/api/fonction/1', (req, res) => {
