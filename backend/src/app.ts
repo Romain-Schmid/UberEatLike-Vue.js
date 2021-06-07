@@ -16,6 +16,14 @@ const sensors = [
    {id:3, type:'omega', datas:{a:1,b:2}},
 ]
 
+const sensorSchema = new mongoose.Schema({
+  id: Number,
+  type : String,
+  data : [String]
+});
+
+const Sensor = mongoose.model('Sensor', sensorSchema);
+
 
 const app = express();
 const port = 3000;
@@ -47,13 +55,22 @@ app
 });
 
 app.post('/api/fonction/3', urlencodedParser, (req, res) => {
-  const createSensor = {
+  const createSensor = new Sensor({
     id : req.body.id,
     type : req.body.type,
     data : req.body.data
-  }
-  res.send("New sensor add " + createSensor.id + ", " + createSensor.type + ", " + createSensor.data)
-})
+  })
+  createSensor.save()
+  .then(() => res.status(201).json({ message: 'Objet add succesfully !'}))		
+  .catch(error => res.status(400).json({ error }));
+});
+
+app.delete('/api/fonction/4/', urlencodedParser, (req, res) => {
+  const deleteSensor = { id: req.body.id};
+	Sensor.deleteMany(deleteSensor)
+  .then(() => res.status(201).json({ message: 'Objet delete !'}))		
+  .catch(error => res.status(400).json({ error }));
+});
 
 app.listen(port, () => {
   return console.log(`server is listening on ${port}`);
