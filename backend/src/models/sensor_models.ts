@@ -7,7 +7,6 @@ const sensorSchema : Schema = new Schema({
     metrics : {type : Boolean, required : false} 
 });
 
-
 export interface ISensor extends Document {
     id: number,
     type : string,

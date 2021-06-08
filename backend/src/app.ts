@@ -1,20 +1,17 @@
 import express from 'express';
-import Sensor from './models/sensor_models';
-
-const app = express();
-const port = 3000;
- 
 import mongoose from 'mongoose';
+import Sensor from './models/sensor_models';
 
 mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true});
 
 const db = mongoose.connection;
-
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('CONNECTION')
 });
 
+const app = express();
+const port = 3000;
 
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = express.urlencoded({ extended: true })
