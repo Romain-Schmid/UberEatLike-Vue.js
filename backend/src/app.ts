@@ -1,9 +1,21 @@
 import express from 'express';
-import {Sensor} from './db';
+import Sensor from './models/sensor_models';
 
 const app = express();
 const port = 3000;
  
+import mongoose from 'mongoose';
+
+mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true});
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('CONNECTION')
+});
+
+
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = express.urlencoded({ extended: true })
 
@@ -19,7 +31,7 @@ app
   .catch(error => res.status(400).json({ error }));
 })
 .get('/api/fonction/get/:id', (req, res) => {
-  var findSensor =  Sensor.find({id: req.params.id});
+  var findSensor =  Sensor.find({id: parseInt(req.params.id)});
 
   findSensor.exec(function(err,result){
     if(err)
