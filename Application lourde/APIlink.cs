@@ -8,11 +8,11 @@ namespace HttpClientProjet
 {
     public class User
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Role { get; set; }
-        public string Email { get; set; }
+        public int id { get; set; }
+        public string username { get; set; }
+        public string role { get; set; }
+        public string password { get; set; }
+        public string email { get; set; }
 
     }
 
@@ -22,7 +22,7 @@ namespace HttpClientProjet
 
         static void ShowUser(User user)
         {
-            Console.WriteLine($"Id: {user.Id}" + $"Username: {user.Username}\tRole: " + $"{user.Role}");
+            Console.WriteLine($"Id: {user.id}" + $"Username: {user.username}\tRole: " + $"{user.role}");
         }
 
         static async Task<Uri> CreateUserAsync(User user)
@@ -38,10 +38,23 @@ namespace HttpClientProjet
         {
             User user = null;
             HttpResponseMessage response = await client.GetAsync(path);
-            if (response.IsSuccessStatusCode)
-            {
+            if (response.IsSuccessStatusCode){
                 user = await response.Content.ReadAsAsync<User>();
             }
+            return user;
+        }
+
+        static async Task<User> GetUserAsyncById(int id)
+        {
+            User user = null;
+            try{
+                HttpResponseMessage response = await client.GetAsync("api/getAll");
+                if (response.IsSuccessStatusCode){
+                    user = await response.Content.ReadAsAsync<User>();
+                }
+            }
+            catch(Exception e){Console.WriteLine($"Error : {e}");}
+
             return user;
         }
 
@@ -71,26 +84,28 @@ namespace HttpClientProjet
         static async Task RunAsync()
         {
             // Update port # in the following line.
-            client.BaseAddress = new Uri("http://localhost:3000/");
+            client.BaseAddress = new Uri("http://78.123.229.253:3456/");
             client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            try
-            {
+            try{
+
+                User result = null;
+                result = await GetUserAsyncById(1);
+                //ShowUser(result);
                 // Create a new product
-                User user = new User
-                {
-                    Id = 9,
-                    Username = "Charly",
-                    Password = "cesi",
-                    Role = "DeliveryMan",
-                    Email = "charlytest@mail.com"
+                //User user = new User
+                //{
+                //    id = 9,
+                //    username = "Charly",
+                //    password = "cesi",
+                //    role = "DeliveryMan",
+                //    email = "charlytest@mail.com"
 
-                };
+                //};
 
-                var url = await CreateUserAsync(user);
-                Console.WriteLine($"Created at {url}");
+                //var url = await CreateUserAsync(user);
+                //Console.WriteLine($"Created at {url}");
 
                 // Get the product
                 //user = await GetUserAsync(url.PathAndQuery);
