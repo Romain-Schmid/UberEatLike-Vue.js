@@ -21,9 +21,10 @@ const User = db_sql.model;
 exports.create = (req, res) => {
       // Create a User
       const user = {
+        email : req.body.email,
         username: req.body.username,
         password: req.body.password,
-        role: req.body.role
+        role: req.body.role,
       };
     
       // Save User in the database
@@ -91,6 +92,13 @@ exports.update = (req, res) => {
           message: "Error updating user with id=" + id
         });
       }); 
+};
+
+//Add refreshToken to account
+exports.refreshToekn = (refTok) => {
+
+
+
 };
 
 // Delete a User with the specified id in the request

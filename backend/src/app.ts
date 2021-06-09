@@ -1,8 +1,17 @@
-import express from 'express';
 import mongoose from 'mongoose';
 import Sensor from './models/sensor_models';
 
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser')
+const logger = require('morgan');
+const cors = require("cors");
+require("dotenv").config();
 
+
+var corsOptions = {
+  origin: "http://localhost:3001",
+};
 
 mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true,  useCreateIndex: true,
 });
@@ -12,40 +21,43 @@ db_mongo.once('open', function() {
   console.log('MongoDB connected...')
 });
 
-// db_mysql.authenticate()
-//   .then(()=> console.log('MySQL connected...'))
-//   .catch(err => console.log('Error : ' + err))
+
+const db = require('./models');
+db.sequelize.authenticate()
+  .then(()=> console.log('MySQL connected...'))
+  .catch(err => console.log('Error : ' + err))
+db.sequelize.sync().then(() => {
+  console.log("Drop and re-sync db.");
+});
 
 
 
-
-
-
-
-const cors = require("cors");
 const app = express();
 
-var corsOptions = {
-  origin: "http://localhost:3001"
-};
-
-app.use(cors(corsOptions));
-
-// parse requests of content-type - application/json
+app.use(logger('dev'));
 app.use(express.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors(corsOptions));
 
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });
 });
 
-const db = require('./models');
-db.sequelize.sync().then(() => {
-  console.log("Drop and re-sync db.");
+require("./routes/route")(app);
+require("./routes/auth")(app);
+require("./routes/secure")(app);
+
+
+const port = 3000;
+
+app.listen(port, () => {
+  return console.log(`server is listening on ${port}`);
 });
+
+module.exports = app;
 
 
 // app.get('/', (req, res) => {
@@ -97,11 +109,3 @@ db.sequelize.sync().then(() => {
 //   .then(Sensor => res.status(202).json({message : "Edit Succesfully"}))
 //   .catch(error => res.status(400).json({ error }));
 // });
-
-require("./routes/route")(app);
-
-const port = 3000;
-
-app.listen(port, () => {
-  return console.log(`server is listening on ${port}`);
-});
