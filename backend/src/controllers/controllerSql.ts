@@ -1,3 +1,7 @@
+import { Hash } from "crypto";
+
+export {};
+const bcrypt = require('bcrypt')
 const db_sql = require("../models");
 const User = db_sql.model;
 
@@ -40,6 +44,48 @@ exports.create = (req, res) => {
         });
 };
 
+exports.createAccount =async (req, res) => {
+  console.log(req.body)
+  try {
+    const hashedPassword = await bcrypt.hash( req.body.password, 10)
+    const user = {
+      email : req.body.email,
+      username: req.body.username,
+      password: hashedPassword,
+      role: req.body.role,
+    };
+    User.create(user)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the user."
+      });
+    });
+  } catch {
+    res.status(500).send()
+  }
+};
+
+exports.loginAccount = async (req, res) => {
+  const email = req.body.email  
+  const user = await User.findOne({ where : {email : email }})
+  if(user == null){
+      return res.status(400).send('Cannot find user')   
+  }
+  try {
+      if(await bcrypt.compare(req.body.password, user.password)){
+        res.send('Success')
+      }else{
+        res.send('Not Allowed')
+      }
+  }catch{
+    res.status(500).send()
+  }
+};
+
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
   User.findAll()
@@ -69,29 +115,68 @@ exports.findOne = (req, res) => {
     });
 };
 
+// Find me with email
+exports.findMe = (req, res) => {
+  const email = req.user.email;
+  User.findOne({ where : {email : email }})
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "DOn't find your profil"
+      });
+    });
+};
+
 // Update a User by the id in the request
 exports.update = (req, res) => {
-    const id = req.params.id;
+  const email = req.body.email;
 
-    User.update(req.body, {
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "User was updated successfully."
-          });
-        } else {
-          res.send({
-            message: `Cannot update user with id=${id}. Maybe user was not found or req.body is empty!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Error updating user with id=" + id
+  User.update(req.body, {
+    where: { email: email }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "User was updated successfully."
         });
-      }); 
+      } else {
+        res.send({
+          message: `Cannot update user with email=${email}. Maybe user was not found or req.body is empty!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error updating user with email=" + email
+      });
+    }); 
+};
+
+// Update a User by the id in the request
+exports.updateParam = (req, res) => {
+  const id = req.params.id;
+
+  User.update(req.body, {
+    where: { id: id }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "User was updated successfully."
+        });
+      } else {
+        res.send({
+          message: `Cannot update user with id=${id}. Maybe user was not found or req.body is empty!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error updating user with id=" + id
+      });
+    }); 
 };
 
 //Add refreshToken to account
@@ -156,3 +241,5 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
+
+exports.module = {User: User, db_sql : db_sql};

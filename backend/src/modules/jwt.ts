@@ -1,22 +1,29 @@
+export {};
+
 var jwt = require('jsonwebtoken');
 
 const createJWT = (user) => {
     var token = jwt.sign({
-        user : user
-    }, process.env.JWT_SECRET, { expiresIn : '1h' });
+        user : user,
+    }, process.env.ACCESS_TOKEN_SECRET, { expiresIn : '15s' });
     
     return token
 }
+
+const createRefreshJWT = (user) => {
+    var refreshToken = jwt.sign({
+        user : user,
+    }, process.env.REFRESH_TOKEN_SECRET);
+    return refreshToken
+}
+
 
 const checkJWT = (token) => {
     let check = false;
 
     try {
-        check = jwt.verify(token, process.env.JWT_SECRET);
-
-        console.log(check)
-        console.log(token)
-    }catch(err){
+        check = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        }catch(err){
         if(err.name == 'TokenExpiredError'){
             return 'renew';
         }else {
@@ -26,4 +33,5 @@ const checkJWT = (token) => {
     return check;
 }
 
-module.exports = {createJWT: createJWT, checkJWT: checkJWT}
+
+module.exports = {createJWT: createJWT, checkJWT: checkJWT, createRefreshJWT:createRefreshJWT}
