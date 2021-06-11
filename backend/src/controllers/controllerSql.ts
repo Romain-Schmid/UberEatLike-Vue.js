@@ -4,22 +4,7 @@ export {};
 const bcrypt = require('bcrypt')
 const db_sql = require("../models");
 const User = db_sql.model;
-
-// var User = sequelize.define('user', {
-//     username: Sequelize.STRING,
-//     password: Sequelize.STRING
-//   });
-  
-//   sequelize.sync().then(function() {
-//     return User.create({
-//       username: 'root',
-//       password: 'root'
-//     });
-//   }).then(function(root) {
-//     console.log(root.get({
-//       plain: true
-//     }));
-//   });
+const { createJWT, checkJWT, createRefreshJWT } = require('../modules/jwt');
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -70,19 +55,22 @@ exports.createAccount =async (req, res) => {
 };
 
 exports.loginAccount = async (req, res) => {
-  const email = req.body.email  
-  const user = await User.findOne({ where : {email : email }})
+  const email = req.body.email;
+  const role = req.body.role;
+  const user = await User.findOne({ where : {email : email, role : role }})
   if(user == null){
       return res.status(400).send('Cannot find user')   
   }
   try {
-      if(await bcrypt.compare(req.body.password, user.password)){
-        res.send('Success')
+      if(await bcrypt.compare(req.body.password, user.password)){      
+          let accessToken = createJWT({ email : req.body.email, role : req.body.role })
+          let refreshToken = await createRefreshToken( req.body.email, req.body.role );
+          res.json({accessToken : accessToken, refreshToken : refreshToken})   
       }else{
-        res.send('Not Allowed')
+        return res.send('Not Allowed')
       }
   }catch{
-    res.status(500).send()
+    return res.status(500).send()
   }
 };
 
@@ -241,5 +229,15 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
+
+async function createRefreshToken(email : string, role : string){
+  const refreshToken = createRefreshJWT({ email : email, role : role })
+  const expiredToken = new Date(new Date().getTime() +  7 * 24 * 60 * 60 * 1000);
+  User.update(
+      { refreshToken : refreshToken, expiredToken: expiredToken }, 
+      { where : { email : email } }
+      )
+  return refreshToken
+}
 
 exports.module = {User: User, db_sql : db_sql};

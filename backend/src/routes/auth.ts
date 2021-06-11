@@ -10,25 +10,19 @@ const User = db_sql.model;
 const controllerMySQL = require('../controllers/controllerSql.ts')
 var jwt = require('jsonwebtoken');
 
-//Créer un compte
-router.post("/create", controllerMySQL.createAccount)
 
 //Se connecter
 router.post("/login", controllerMySQL.loginAccount)
 
-//Create JWT & RefreshToken
-router.post("/createToken", async function(req, res, next){
-    let accessToken = createJWT({ email : req.body.email, role : req.body.role })
-    let refreshToken = await createRefreshToken( req.body.email, req.body.role );
-    res.json({accessToken : accessToken, refreshToken : refreshToken})
-});
-
 //Create an another Access Token by refreshToken
 router.post("/token", async function(req, res, next){
-    const email = req.body.email  
-    const data = await User.findOne({ where : {email : email }})   
+    const {email, role} = req.body  
+
+    const data = await User.findOne({ where : {email : email, role:role }})   
+    if(data == null){
+        return res.status(400).send('Cannot find user')   
+    }
     const refreshToken = data.refreshToken;
-    console.log(data)
     if(refreshToken == null) return res.sendStatus(401)
     if(!refreshToken.includes(refreshToken)) return res.sendStatus(403)
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {   

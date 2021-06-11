@@ -8,11 +8,14 @@ router.post("/create", controllerMySQL.create)
 
 router.get("/getAll", controllerMySQL.findAll)
 
-router.get("/get/:id", controllerMySQL.findAll)
+router.get("/get/:id", controllerMySQL.findOne)
 
 router.get("/getmyid", controllerMySQL.findMe)
 
-router.put("/edit/:id", controllerMySQL.update)
+router.put("/edit/", controllerMySQL.update)
+
+router.put("/edit/:id", controllerMySQL.updateParam)
+
 
 router.delete("/delete/:id", controllerMySQL.delete)
 
