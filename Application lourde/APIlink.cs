@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Net;
 
 namespace HttpClientProjet
 {
     public class User
     {
-        public int id { get; set; }
+        public string id { get; set; }
         public string username { get; set; }
         public string role { get; set; }
         public string password { get; set; }
@@ -20,9 +22,14 @@ namespace HttpClientProjet
     {
         static HttpClient client = new HttpClient();
 
-        static void ShowUser(User user)
-        {
-            Console.WriteLine($"Id: {user.id}" + $"Username: {user.username}\tRole: " + $"{user.role}");
+        static void ShowMultipleUsers(List<User> users){
+            foreach(var user in users){
+               Console.WriteLine($"Id: {user.id} " + $"Username: {user.username}\tRole: " + $"{user.role}\tEmail: " + $"{user.email}");
+            }
+        }
+
+        static void ShowUser(User user){
+                Console.WriteLine($"Id: {user.id} " + $"Username: {user.username}\tRole: " + $"{user.role}\tEmail: " + $"{user.email}");
         }
 
         static async Task<Uri> CreateUserAsync(User user)
@@ -34,47 +41,47 @@ namespace HttpClientProjet
             return response.Headers.Location;
         }
 
-        static async Task<User> GetUserAsync(string path)
+        static async Task<User> GetUserByIdAsync(string id)
         {
-            User user = null;
-            HttpResponseMessage response = await client.GetAsync(path);
+            List<User> user = new List<User>();
+            HttpResponseMessage response = await client.GetAsync($"api/get/{id}");
             if (response.IsSuccessStatusCode){
-                user = await response.Content.ReadAsAsync<User>();
+                user = await response.Content.ReadAsAsync<List<User>>();
+                //foreach(var t in user)
+                //{
+                //    Console.WriteLine($"Id : {t.id}\tSurnom :" + $"{t.username}");
+                //}
             }
-            return user;
+         
+            return user[0];
         }
 
-        static async Task<User> GetUserAsyncById(int id)
+        static async Task<List<User>> GetAllUserAsync(){
+            var response = await client.GetAsync("api/getAll");
+            List<User> result = new List<User>();
+
+            if (response.IsSuccessStatusCode)
+                result = await response.Content.ReadAsAsync<List<User>>();
+            else{Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);}
+
+            return result;
+        }
+
+        static async Task<User> UpdateProductAsync(User user)
         {
-            User user = null;
-            try{
-                HttpResponseMessage response = await client.GetAsync("api/getAll");
-                if (response.IsSuccessStatusCode){
-                    user = await response.Content.ReadAsAsync<User>();
-                }
-            }
-            catch(Exception e){Console.WriteLine($"Error : {e}");}
+            HttpResponseMessage response = await client.PutAsJsonAsync($"api/edit/{user.id}", user);
+                response.EnsureSuccessStatusCode();
 
+            // Deserialize the updated product from the response body.
+            user = await response.Content.ReadAsAsync<User>();
             return user;
         }
 
-        //static async Task<Product> UpdateProductAsync(Product product)
-        //{
-        //    HttpResponseMessage response = await client.PutAsJsonAsync(
-        //        $"api/products/{product.Id}", product);
-        //    response.EnsureSuccessStatusCode();
-
-        //    // Deserialize the updated product from the response body.
-        //    product = await response.Content.ReadAsAsync<Product>();
-        //    return product;
-        //}
-
-        //static async Task<HttpStatusCode> DeleteProductAsync(string id)
-        //{
-        //    HttpResponseMessage response = await client.DeleteAsync(
-        //        $"api/products/{id}");
-        //    return response.StatusCode;
-        //}
+        static async Task<HttpStatusCode> DeleteUserAsync(string id)
+        {
+            HttpResponseMessage response = await client.DeleteAsync($"api/delete/{id}");
+            return response.StatusCode;
+        }
 
         static void Main()
         {
@@ -90,19 +97,9 @@ namespace HttpClientProjet
 
             try{
 
-                User result = null;
-                result = await GetUserAsyncById(1);
-                //ShowUser(result);
-                // Create a new product
-                //User user = new User
-                //{
-                //    id = 9,
-                //    username = "Charly",
-                //    password = "cesi",
-                //    role = "DeliveryMan",
-                //    email = "charlytest@mail.com"
+                ShowUser(await GetUserByIdAsync("19"));
 
-                //};
+
 
                 //var url = await CreateUserAsync(user);
                 //Console.WriteLine($"Created at {url}");
