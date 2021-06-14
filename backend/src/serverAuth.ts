@@ -23,9 +23,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Expose-Headers", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+
   res.header(
     "Access-Control-Allow-Headers",
     "Access-Control-Expose-Headers: accessToken, Uid",
+    "Access-Control-Allow-Headers: Authorization",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   next();
