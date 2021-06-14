@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_LOG = 'fradetaxel.fr:4000/auth/login';
-const API_CREAT = 'fradetaxel.fr:3000/login/create';
+const API_LOG = 'http://fradetaxel.fr:4567/auth/login';
+const API_CREAT = 'http://fradetaxel.fr:3456/login/create';
 
 class AuthService {
   login(user) {
@@ -11,9 +11,11 @@ class AuthService {
         password: user.password,
         role: user.role
       })
-      .then(response => {
-        if (response.data.accessToken) {
-          localStorage.setItem('user', JSON.stringify(response.data));
+      .then(headers => {
+        console.log(headers)
+        if (headers.accessToken) {
+          console.log(headers.accessToken)
+          localStorage.setItem('user', JSON.stringify(headers.data));
         }
 
         return response.data;
@@ -25,12 +27,16 @@ class AuthService {
   }
 
   register(user) {
-    return axios.post(API_CREAT, {
-      username: user.username,
-      email: user.email,
-      password: user.password,
-      role: user.role
-    });
+    return axios({
+      method: 'post',
+      url: API_CREAT,
+      data: {
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        role: user.role
+      }
+  });
   }
 }
 

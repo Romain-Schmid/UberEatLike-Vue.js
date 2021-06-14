@@ -12,7 +12,7 @@
       >
         <b-form-input
           id="input-1"
-          v-model="form.email"
+          v-model="user.email"
           type="email"
           placeholder="Entrer votre email"
           required
@@ -20,48 +20,76 @@
 
         <b-form-input
           id="input-2"
-          v-model="form.password"
+          v-model="user.password"
           type="password"
           placeholder="Entrer Mot de passe"
           aria-describedby="password-help-block"
         ></b-form-input>
       </b-form-group>
 
+      <b-form-select v-model="user.role" required class="mb-3">
+      <b-form-select-option :value="null">Please select an option</b-form-select-option>
+      <b-form-select-option value="Customer">Client</b-form-select-option>
+      <b-form-select-option value="DeliveryMan">Livreur</b-form-select-option>
+      <b-form-select-option value="Restorer">Restaurateur</b-form-select-option>
+    </b-form-select>
+
       <b-button type="submit" variant="primary">Submit</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
     <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ form }}</pre>
+      <pre class="m-0">{{ user }}</pre>
     </b-card>
   </div>
 </template>
 
 <script>
 import User from '../models/user.js';
+//import authHeader from '../services/auth-header';
 
 
 export default {
   name: 'Login',
   data() {
     return {
-      form: {
-        email: "",
-        password: "",
-      },
       user: new User('', ''),
       show: true,
     };
   },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
+  },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push('/profile');
+    }
+  },
   methods: {
     onSubmit(event) {
       event.preventDefault();
-      alert(JSON.stringify(this.form));
-    },
+      this.$store.dispatch('auth/login', this.user).then(
+        data => {
+              this.message = data.message;
+              this.successful = true;
+              alert(JSON.stringify(this.message))
+            },
+            error => {
+              this.loading = false;
+              this.message =
+                (error.response && error.response.data) ||
+                error.message ||
+                error.toString();
+            }
+          );
+        },
     onReset(event) {
       event.preventDefault();
       // Reset our form values
-      this.form.email = "";
-      this.form.password = "";
+      this.user.email = "";
+      this.user.password = "";
+      this.user.role = "";
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
