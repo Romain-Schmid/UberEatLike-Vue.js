@@ -25,6 +25,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
+    "Access-Control-Expose-Headers: accessToken, Uid",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   next();
