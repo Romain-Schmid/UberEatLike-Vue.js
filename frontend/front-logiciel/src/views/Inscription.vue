@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <b-container>
-      <h1>Connexion</h1>
-      <p>Tu n'a pas encore de compte ? <router-link to="/inscription">Créer un compte</router-link></p>
+      <h1>Inscription</h1>
     </b-container>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
       <b-form-group
@@ -24,10 +23,26 @@
           type="password"
           placeholder="Entrer Mot de passe"
           aria-describedby="password-help-block"
+          required
+        ></b-form-input>
+
+                <b-form-input
+          id="input-3"
+          v-model="form.username"
+          placeholder="Entrer nom d'utilisateur"
+          required
         ></b-form-input>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Submit</b-button>
+    <b-form-select v-model="form.role" required class="mb-3">
+      <b-form-select-option :value="null">Please select an option</b-form-select-option>
+      <b-form-select-option value="Customer">Client</b-form-select-option>
+      <b-form-select-option value="DeliveryMan">Livreur</b-form-select-option>
+      <b-form-select-option value="Restorer">Restaurateur</b-form-select-option>
+    </b-form-select>
+
+
+      <b-button type="submit" variant="primary">submit</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
     <b-card class="mt-3" header="Form Data Result">
@@ -37,18 +52,15 @@
 </template>
 
 <script>
-import User from '../models/user.js';
-
-
 export default {
-  name: 'Login',
   data() {
     return {
       form: {
         email: "",
         password: "",
+        role: null,
+        username : "",
       },
-      user: new User('', ''),
       show: true,
     };
   },
@@ -56,12 +68,22 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       alert(JSON.stringify(this.form));
+      /*axios.get(`http://jsonplaceholder.typicode.com/posts`)
+      .then(response => {
+        // JSON responses are automatically parsed.
+        this.posts = response.datas
+      })
+      .catch(e => {
+        this.errors.push(e)
+      })*/
     },
     onReset(event) {
       event.preventDefault();
       // Reset our form values
       this.form.email = "";
       this.form.password = "";
+      this.form.role = null;
+      this.form.username = "",
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
