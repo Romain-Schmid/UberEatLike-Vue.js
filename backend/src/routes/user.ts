@@ -16,7 +16,6 @@ router.put("/edit/", controllerMySQL.update)
 
 router.put("/edit/:id", controllerMySQL.updateParam)
 
-
 router.delete("/delete/:id", controllerMySQL.delete)
 
 router.delete("/delete", controllerMySQL.deleteAll)

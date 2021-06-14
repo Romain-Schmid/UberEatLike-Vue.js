@@ -6,15 +6,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser')
 const logger = require('morgan');
 const log = require('./modules/logger')
-const cors = require("cors");
 const { checkJWT } = require('./modules/jwt');
 
 //Import routes 
 var authRouter = require('./routes/auth')
 
-var corsOptions = {
-  origin: "http://localhost:3001",
-};
 
 
 //Create App with options
@@ -25,7 +21,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors(corsOptions));
 
 
 app.use('/auth', authRouter);

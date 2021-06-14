@@ -8,7 +8,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser')
 const logger = require('morgan');
 const log = require('./modules/logger')
-const cors = require("cors");
 const { checkJWT,createJWT , checkRefreshToken } = require('./modules/jwt');
 var jwt = require('jsonwebtoken');
 const db_sql = require("./models");
@@ -18,9 +17,7 @@ const User = db_sql.model;
 var usersRouter = require('./routes/user')
 var loginRouter = require('./routes/login')
 
-var corsOptions = {
-  origin: "http://localhost:3001",
-};
+
 
 // Connection MongoDB
 mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true,  useCreateIndex: true,
@@ -49,7 +46,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors(corsOptions));
 
 app.use('/login' ,loginRouter);
 

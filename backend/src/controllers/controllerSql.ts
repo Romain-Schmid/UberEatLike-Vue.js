@@ -1,10 +1,10 @@
-import { Hash } from "crypto";
+import jwt_decode from "jwt-decode";
 
 export {};
 const bcrypt = require('bcrypt')
 const db_sql = require("../models");
 const User = db_sql.model;
-const { createJWT, checkJWT, createRefreshJWT } = require('../modules/jwt');
+const { createJWT, createRefreshJWT } = require('../modules/jwt');
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -55,23 +55,34 @@ exports.createAccount =async (req, res) => {
 };
 
 exports.loginAccount = async (req, res) => {
-  const email = req.body.email;
-  const role = req.body.role;
+  const {email, role, password} = req.body;
   const user = await User.findOne({ where : {email : email, role : role }})
   if(user == null){
       return res.status(400).send('Cannot find user')   
   }
   try {
-      if(await bcrypt.compare(req.body.password, user.password)){      
-          let accessToken = createJWT({ email : req.body.email, role : req.body.role })
-          let refreshToken = await createRefreshToken( req.body.email, req.body.role );
-          res.set({accessToken : accessToken}).json({message : 'Vous êtes connecter'})
+      if(await bcrypt.compare(password, user.password)){      
+          let accessToken = createJWT({ email : email, role : role })
+          let refreshToken = await createRefreshToken( email, role );
+          res.set({accessToken : accessToken}).json({message : 'Vous êtes connecté'})
       }else{
         return res.send('Not Allowed')
       }
   }catch{
     return res.status(500).send()
   }
+};
+
+exports.logout = async (req, res ) => {
+  var token = req.headers.authorization
+  token = token.replace(/^Bearer\s+/, "");    
+  let decoded : any = jwt_decode(token)    
+  const {email, role} = decoded.user;
+  const user = Boolean(Number(await User.update({ refreshToken : null}, {where : {email : email, role: role}})));
+  if(!user){
+      res.status(400).send('Cannot find user')   
+  }
+  res.status(200).send('Logout');
 };
 
 // Retrieve all Users from the database.
