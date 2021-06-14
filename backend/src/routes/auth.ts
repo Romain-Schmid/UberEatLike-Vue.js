@@ -28,7 +28,7 @@ router.post("/token", async function(req, res, next){
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {   
         console.log(user) 
         const accessToken = createJWT({ email : user.email, role : user.role })
-        res.json({ accessToken: accessToken })
+        res.set({ accessToken: accessToken }).json({message : 'Vous êtes connecter'});
     })
 ;})
 

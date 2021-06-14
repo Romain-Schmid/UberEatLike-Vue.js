@@ -22,20 +22,20 @@ var corsOptions = {
   origin: "http://localhost:3001",
 };
 
-//Connection MongoDB
-// mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true,  useCreateIndex: true,
-// });
-// const db_mongo = mongoose.connection;
-// db_mongo.on('error', console.error.bind(console, 'connection error:'));
-// db_mongo.once('open', function() {
-//    console.log('MongoDB connected...')
-// });
+// Connection MongoDB
+mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true,  useCreateIndex: true,
+});
+const db_mongo = mongoose.connection;
+db_mongo.on('error', console.error.bind(console, 'connection error:'));
+db_mongo.once('open', function() {
+   console.log('MongoDB connected...')
+});
 
-//Connection MySQL
-// const db = require('./models');
-// db.sequelize.authenticate()
-//   .then(()=>console.log('MySQL connected...'))
-//   .catch(err => console.log('Error : ' + err))
+// Connection MySQL
+const db = require('./models');
+db.sequelize.authenticate()
+  .then(()=>console.log('MySQL connected...'))
+  .catch(err => console.log('Error : ' + err))
 // db.sequelize.sync().then(() => {
 //   console.log("Drop and re-sync db.");
 // });
@@ -92,7 +92,8 @@ var secure = async function (req,res,next) {
           //Si Refresh Token valide
           else {
             const accessToken = createJWT({ email : email, role : role })
-            res.json({ accessToken: accessToken })
+            res.set({ accessToken: accessToken })
+            next();
           }
           
         }

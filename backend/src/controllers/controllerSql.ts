@@ -65,7 +65,7 @@ exports.loginAccount = async (req, res) => {
       if(await bcrypt.compare(req.body.password, user.password)){      
           let accessToken = createJWT({ email : req.body.email, role : req.body.role })
           let refreshToken = await createRefreshToken( req.body.email, req.body.role );
-          res.json({accessToken : accessToken, refreshToken : refreshToken})   
+          res.set({accessToken : accessToken}).json({message : 'Vous êtes connecter'})
       }else{
         return res.send('Not Allowed')
       }
