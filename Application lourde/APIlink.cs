@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
+using System.Linq;
 
 namespace HttpClientProjet
 {
@@ -15,12 +16,14 @@ namespace HttpClientProjet
         public string role { get; set; }
         public string password { get; set; }
         public string email { get; set; }
+        public string accessToken { get; set; }
 
     }
 
     class Program
     {
-        static HttpClient client = new HttpClient();
+        static HttpClient client = new HttpClient(new HttpClientHandler { UseCookies = false });
+        static HttpClient clientlog = new HttpClient();
 
         static void ShowMultipleUsers(List<User> users){
             foreach(var user in users){
@@ -41,28 +44,24 @@ namespace HttpClientProjet
             return response.Headers.Location;
         }
 
+        //ne fonctionne pas car l'API renvoie plusieurs résultats
         static async Task<User> GetUserByIdAsync(string id)
         {
-            List<User> user = new List<User>();
+            User user = new User();
             HttpResponseMessage response = await client.GetAsync($"api/get/{id}");
             if (response.IsSuccessStatusCode){
-                user = await response.Content.ReadAsAsync<List<User>>();
-                //foreach(var t in user)
-                //{
-                //    Console.WriteLine($"Id : {t.id}\tSurnom :" + $"{t.username}");
-                //}
+                user = await response.Content.ReadAsAsync<User>();
             }
-         
-            return user[0];
+            return user;
         }
 
         static async Task<List<User>> GetAllUserAsync(){
-            var response = await client.GetAsync("api/getAll");
+            var response = await client.GetAsync("users/getAll");
             List<User> result = new List<User>();
 
             if (response.IsSuccessStatusCode)
                 result = await response.Content.ReadAsAsync<List<User>>();
-            else{Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);}
+            else{Console.WriteLine($"{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);}
 
             return result;
         }
@@ -83,6 +82,23 @@ namespace HttpClientProjet
             return response.StatusCode;
         }
 
+        static async Task Login(User user)
+        {
+            HttpResponseMessage response = await clientlog.PostAsJsonAsync($"/auth/login", user);
+            CheckToken(response);
+            
+        }
+
+        static void CheckToken(HttpResponseMessage response)
+        {
+            if(response.Headers.SingleOrDefault(header => header.Key == "Set-Cookie").Value != null)
+            {
+                IEnumerable<string> cookies = response.Headers.SingleOrDefault(header => header.Key == "Set-Cookie").Value;
+                client.DefaultRequestHeaders.Remove("Cookie");
+                client.DefaultRequestHeaders.Add("Cookie", cookies);
+            }
+        }
+
         static void Main()
         {
             RunAsync().GetAwaiter().GetResult();
@@ -95,35 +111,28 @@ namespace HttpClientProjet
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+            clientlog.BaseAddress = new Uri("http://78.123.229.253:4567/");
+            clientlog.DefaultRequestHeaders.Accept.Clear();
+            clientlog.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
             try{
 
-                ShowUser(await GetUserByIdAsync("19"));
+                User user = new User()
+                {
+                    id= null,
+                    username= "kevin",
+                    role= "Customer",
+                    password= "azdazd",
+                    email= "romain.fr@gmail.com",
+                };
 
+                await Login(user);
 
+                ShowMultipleUsers(await GetAllUserAsync());
 
-                //var url = await CreateUserAsync(user);
-                //Console.WriteLine($"Created at {url}");
-
-                // Get the product
-                //user = await GetUserAsync(url.PathAndQuery);
-                //ShowUser(user);
-
-                //// Update the product
-                //Console.WriteLine("Updating price...");
-                //product.Price = 80;
-                //await UpdateProductAsync(product);
-
-                //// Get the updated product
-                //product = await GetProductAsync(url.PathAndQuery);
-                //ShowProduct(product);
-
-                //// Delete the product
-                //var statusCode = await DeleteProductAsync(product.Id);
-                //Console.WriteLine($"Deleted (HTTP Status = {(int)statusCode})");
 
             }
-            catch (Exception e)
-            {
+            catch (Exception e){
                 Console.WriteLine(e.Message);
             }
 
