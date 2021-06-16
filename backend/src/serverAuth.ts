@@ -26,12 +26,12 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Expose-Headers", "*");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Access-Control-Expose-Headers: accessToken, Uid",
-    "Access-Control-Allow-Headers: Authorization",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  // res.header(
+  //   "Access-Control-Allow-Headers",
+  //   "Access-Control-Expose-Headers: accessToken, Uid",
+  //   "Access-Control-Allow-Headers: Authorization",
+  //   "Origin, X-Requested-With, Content-Type, Accept"
+  // );
   next();
 });
 

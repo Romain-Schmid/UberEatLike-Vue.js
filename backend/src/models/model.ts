@@ -11,11 +11,11 @@ module.exports = (sequelize, Sequelize) => {
       },
       password: {
         type: Sequelize.STRING,
-        // allowNull: false
+        allowNull: false
       },
       role: {
         type: Sequelize.STRING,
-        // allowNull: false
+        allowNull: false
       },
       refreshToken: {
         type: Sequelize.STRING,

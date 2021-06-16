@@ -138,10 +138,21 @@ exports.findMe = (req, res) => {
 };
 
 // Update a User by the id in the request
-exports.update = (req, res) => {
-  const email = req.body.email;
+exports.update = async (req, res) => {
+  const email = req.email;
+  const user = {
+    email : email,
+    username: req.body.username,
+    role: req.body.role,
+  };
 
-  User.update(req.body, {
+  if(req.body.password){
+    const hashedPassword = await bcrypt.hash( req.body.password, 10)
+    user['password'] = hashedPassword;
+  }
+  console.log(user)
+
+  User.update(user, {
     where: { email: email }
   })
     .then(num => {
@@ -187,12 +198,6 @@ exports.updateParam = (req, res) => {
     }); 
 };
 
-//Add refreshToken to account
-exports.refreshToekn = (refTok) => {
-
-
-
-};
 
 // Delete a User with the specified id in the request
 exports.delete = (req, res) => {

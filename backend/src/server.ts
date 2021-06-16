@@ -12,6 +12,7 @@ const { checkJWT,createJWT , checkRefreshToken } = require('./modules/jwt');
 var jwt = require('jsonwebtoken');
 const db_sql = require("./models");
 const User = db_sql.model;
+const controllerMySQL = require('./controllers/controllerSql.ts')
 
 //Import routes 
 var usersRouter = require('./routes/user')
@@ -48,29 +49,41 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Access-Control-Expose-Headers: accessToken, Uid",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  res.setHeader("Access-Control-Expose-Headers", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
   next();
 });
-app.use('/login' ,loginRouter);
+
+app.post("/login/create",  controllerMySQL.createAccount)
 
 //Middleware
 var secure = async function (req,res,next) {
   //Get Token dans le header
   var tokenCookie = req.cookies.accessToken;
   var refreshTokenCookie = req.cookies.refreshToken;
+
+  if(!refreshTokenCookie && !tokenCookie){
+    res.status(401).json({
+      message : "Acces refusé, token incorrect ou inexistant"
+    })  
+  }
+
   try {
+
     const verif = jwt.verify(tokenCookie, process.env.ACCESS_TOKEN_SECRET);
+    let decoded : any = jwt_decode(tokenCookie)
+    const {email, role} = decoded.user;
+    req.email = email;
+    req.role = role;
     next(); //Si pas d'erreur, next
+
   } catch (err) {
+    
     //Si le token a expiré
     if(err && refreshTokenCookie) {
-      //Recup RefreshToken pour voir s'il est toujours valide
       let decoded : any = jwt_decode(refreshTokenCookie)
       const {email, role} = decoded.user;
+      //Recup RefreshToken pour voir s'il est toujours valide
       const data = await User.findOne({ where : {email : email, role:role }})   
       const refreshToken = data.refreshToken;
       //Return si Refresh Token Inexistant
@@ -105,6 +118,7 @@ var secure = async function (req,res,next) {
 
 app.use(secure)
 
+app.use('/login' ,loginRouter);
 app.use('/users' ,usersRouter);
 
 const port = 3000;
