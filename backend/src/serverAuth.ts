@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', ['http://localhost:8080', 'http://localhost:8081', 'http://localhost:8082', 'http://localhost:8083','http://localhost:8084', 'http://localhost:8085']);
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
