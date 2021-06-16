@@ -22,17 +22,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "http://fradetaxel.fr:4000");
-  res.setHeader("Access-Control-Expose-Headers", "accept");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-requested-with");
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4567');
 
-  // res.header(
-  //   "Access-Control-Allow-Headers",
-  //   "Access-Control-Expose-Headers: accessToken, Uid",
-  //   "Access-Control-Allow-Headers: Authorization",
-  //   "Origin, X-Requested-With, Content-Type, Accept"
-  // );
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
 
