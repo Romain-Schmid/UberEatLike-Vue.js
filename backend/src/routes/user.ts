@@ -1,10 +1,8 @@
 import { Router } from 'express'
 
 
-const controllerMySQL = require('../controllers/controllerSql.ts')
+const controllerMySQL = require('../controllers/controllerLoginAuth.ts')
 var router = Router();
-
-router.post("/create", controllerMySQL.create)
 
 router.get("/getAll", controllerMySQL.findAll)
 

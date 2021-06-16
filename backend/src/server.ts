@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Sensor from './models/sensor_models';
 import jwt_decode from "jwt-decode";
 
 require("dotenv").config();
@@ -11,23 +10,31 @@ const log = require('./modules/logger')
 const { checkJWT,createJWT , checkRefreshToken } = require('./modules/jwt');
 var jwt = require('jsonwebtoken');
 const db_sql = require("./models");
-const User = db_sql.model;
-const controllerMySQL = require('./controllers/controllerSql.ts')
+const User = db_sql.model.User;
+const Restaurant = db_sql.model.Restaurant;
+
+console.log(User)
+const controllerMySQL = require('./controllers/controllerLoginAuth.ts')
 
 //Import routes 
-var usersRouter = require('./routes/user')
-var loginRouter = require('./routes/login')
-
-
+var usersRouter = require('./routes/user');
+var accountRouter = require('./routes/account');
+var orderRouter = require('./routes/order');
+var menuRouter = require('./routes/menu');
+var articleRouter = require('./routes/article');
+var orderHistoryRouter = require('./routes/orderHistory');
+var deliveryRouter = require('./routes/delivery');
+var restaurantRouter = require('./routes/delivery');
+var sponsorRouter = require('./routes/sponsorship');
 
 // Connection MongoDB
-mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true,  useCreateIndex: true,
-});
-const db_mongo = mongoose.connection;
-db_mongo.on('error', console.error.bind(console, 'connection error:'));
-db_mongo.once('open', function() {
-   console.log('MongoDB connected...')
-});
+// mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true,  useCreateIndex: true,
+// });
+// const db_mongo = mongoose.connection;
+// db_mongo.on('error', console.error.bind(console, 'connection error:'));
+// db_mongo.once('open', function() {
+//    console.log('MongoDB connected...')
+// });
 
 // Connection MySQL
 const db = require('./models');
@@ -49,7 +56,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://fradetaxel.fr:3456');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8081');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -92,6 +99,7 @@ var secure = async function (req,res,next) {
     if(err && refreshTokenCookie) {
       let decoded : any = jwt_decode(refreshTokenCookie)
       const {email, role} = decoded.user;
+
       //Recup RefreshToken pour voir s'il est toujours valide
       const data = await User.findOne({ where : {email : email, role:role }})   
       const refreshToken = data.refreshToken;
@@ -127,8 +135,16 @@ var secure = async function (req,res,next) {
 
 app.use(secure)
 
-app.use('/login' ,loginRouter);
+app.use('/account' ,accountRouter);
 app.use('/users' ,usersRouter);
+app.use('/order' ,orderRouter);
+app.use('/menu' ,menuRouter);
+app.use('/article' ,articleRouter);
+app.use('/orderHistory' ,orderHistoryRouter);
+app.use('/delivery' ,deliveryRouter);
+app.use('/restaurant' ,restaurantRouter);
+app.use('/sponsor' ,sponsorRouter);
+
 
 const port = 3000;
 

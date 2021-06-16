@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 export {};
 const bcrypt = require('bcrypt')
 const db_sql = require("../models");
-const User = db_sql.model;
+const User = db_sql.model.User;
 const { createJWT, createRefreshJWT } = require('../modules/jwt');
 
 // Create and Save a new User
@@ -82,15 +82,16 @@ exports.loginAccount = async (req, res) => {
   }
 };
 
-exports.logout = async (req, res ) => {
-  var token = req.headers.authorization
-  token = token.replace(/^Bearer\s+/, "");    
-  let decoded : any = jwt_decode(token)    
-  const {email, role} = decoded.user;
+exports.logout = async (req, res ) => {    
+  const {email, role} = req.body;
+  console.log(email)
   const user = Boolean(Number(await User.update({ refreshToken : null}, {where : {email : email, role: role}})));
   if(!user){
       res.status(400).send('Cannot find user')   
   }
+  res.clearCookie('accessToken');
+  res.clearCookie('refreshToken');
+
   res.status(200).send('Logout');
 };
 
@@ -201,10 +202,10 @@ exports.updateParam = (req, res) => {
 
 // Delete a User with the specified id in the request
 exports.delete = (req, res) => {
-  const id = req.params.id;
+  const {email, role} = req;
 
   User.destroy({
-    where: { id: id }
+    where : {email : email, role: role}
   })
     .then(num => {
       if (num == 1) {
@@ -213,13 +214,13 @@ exports.delete = (req, res) => {
         });
       } else {
         res.send({
-          message: `Cannot delete User with id=${id}. Maybe User was not found!`
+          message: `Cannot delete User with email=${email}. Maybe User was not found!`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Could not delete User with id=" + id
+        message: "Could not delete User with email=" + email
       });
     });
 };
