@@ -49,7 +49,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "http://fradetaxel.fr:4000");
+  res.setHeader("Access-Control-Allow-Origin", "http://fradetaxel.fr");
   res.setHeader("Access-Control-Expose-Headers", "accept");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-requested-with");
   next();
