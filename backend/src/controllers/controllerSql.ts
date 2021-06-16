@@ -64,6 +64,15 @@ exports.loginAccount = async (req, res) => {
       if(await bcrypt.compare(password, user.password)){      
           let accessToken = createJWT({ email : email, role : role })
           let refreshToken = await createRefreshToken( email, role );
+          res.cookie("accessToken", accessToken, {
+            expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+            // httpOnly: true,
+            // secure: true,
+            // sameSite: "strict",
+          });
+          res.cookie("refreshToken", refreshToken, {
+            expires: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
+          });
           res.set({accessToken : accessToken}).json({message : 'Vous êtes connecté'})
       }else{
         return res.send('Not Allowed')

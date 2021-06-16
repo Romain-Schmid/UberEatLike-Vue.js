@@ -60,56 +60,48 @@ app.use('/login' ,loginRouter);
 //Middleware
 var secure = async function (req,res,next) {
   //Get Token dans le header
-  var token = req.headers.authorization
-  if(token) {
-      token = token.replace(/^Bearer\s+/, "");    
-      //Check Access Token 
-      try {
-        const verif = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        next(); //Si pas d'erreur, next
-      } catch (err) {
-        //Si erreur, on  récupère les valeurs dans le token
-
-        //Si le token a expiré
-        if(err.name == 'TokenExpiredError' ) {
-          let decoded : any = jwt_decode(token)
-          console.log(decoded);
-  
-          //Recup RefreshToken pour voir s'il est toujours valide
-          const {email, role} = decoded.user;
-          const data = await User.findOne({ where : {email : email, role:role }})   
-          const refreshToken = data.refreshToken;
-          //Return si Refresh Token Inexistant
-          if(refreshToken == null) return res.sendStatus(401)
-          if(!refreshToken.includes(refreshToken)) return res.sendStatus(403)
-          //Check Refresh Token
-          const verifRefresh = checkRefreshToken(refreshToken)
-          console.log('verifRefresh')
-
-          console.log(verifRefresh)
-          //Si Refresh Token périmé ou autre erreur
-          if(verifRefresh == 'TokenExpiredError' || !verifRefresh){
-            res.status(401).json({
-              message : "Veuillez vous reconnecter, votre session a expiré"
-            })
-          }
-          //Si Refresh Token valide
-          else {
-            const accessToken = createJWT({ email : email, role : role })
-            res.set({ accessToken: accessToken })
-            next();
-          }
-          
-        }
-        //Si token incorrect
-        else{
-          res.status(401).json({
-            message : "Acces refusé, token incorrect"
-          })
-        }
+  var tokenCookie = req.cookies.accessToken;
+  var refreshTokenCookie = req.cookies.refreshToken;
+  try {
+    const verif = jwt.verify(tokenCookie, process.env.ACCESS_TOKEN_SECRET);
+    next(); //Si pas d'erreur, next
+  } catch (err) {
+    //Si le token a expiré
+    if(err && refreshTokenCookie) {
+      //Recup RefreshToken pour voir s'il est toujours valide
+      let decoded : any = jwt_decode(refreshTokenCookie)
+      const {email, role} = decoded.user;
+      const data = await User.findOne({ where : {email : email, role:role }})   
+      const refreshToken = data.refreshToken;
+      //Return si Refresh Token Inexistant
+      if(refreshToken == null) return res.sendStatus(401)
+      if(!refreshToken.includes(refreshToken)) return res.sendStatus(403)
+      //Check Refresh Token
+      const verifRefresh = checkRefreshToken(refreshToken)
+      //Si Refresh Token périmé ou autre erreur
+      if(verifRefresh == 'TokenExpiredError' || !verifRefresh){
+        res.status(401).json({
+          message : "Veuillez vous reconnecter, votre session a expiré"
+        })
       }
+      //Si Refresh Token valide
+      else {
+        const accessToken = createJWT({ email : email, role : role })
+        res.cookie("accessToken", accessToken, {
+          expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+        });        
+        next();
+      }
+      
+    }
+    //Si token incorrect
+    else{
+      res.status(401).json({
+        message : "Acces refusé, token incorrect ou inexistant"
+      })
     }
   }
+}
 
 app.use(secure)
 
