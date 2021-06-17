@@ -41,6 +41,30 @@ module.exports = (sequelize, Sequelize) => {
       },
       description : {
         type: Sequelize.STRING,
+      },
+      picture : {
+        type: Sequelize.STRING,
+      }
+    });
+
+    const Article = sequelize.define("article", {
+      titre: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      owner : {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      note: {
+        type: Sequelize.STRING,
+        // allowNull: false
+      },
+      description : {
+        type: Sequelize.STRING,
+      },
+      picture : {
+        type: Sequelize.STRING,
       }
     });
 

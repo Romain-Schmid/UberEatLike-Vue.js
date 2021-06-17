@@ -24,7 +24,7 @@ var menuRouter = require('./routes/menu');
 var articleRouter = require('./routes/article');
 var orderHistoryRouter = require('./routes/orderHistory');
 var deliveryRouter = require('./routes/delivery');
-var restaurantRouter = require('./routes/delivery');
+var restaurantRouter = require('./routes/restaurant');
 var sponsorRouter = require('./routes/sponsorship');
 
 // Connection MongoDB
@@ -41,9 +41,9 @@ const db = require('./models');
 db.sequelize.authenticate()
   .then(()=>console.log('MySQL connected...'))
   .catch(err => console.log('Error : ' + err))
-// db.sequelize.sync().then(() => {
-//   console.log("Drop and re-sync db.");
-// });
+db.sequelize.sync().then(() => {
+  console.log("Drop and re-sync db.");
+});
 
 
 //Create App with options
@@ -117,6 +117,8 @@ var secure = async function (req,res,next) {
       //Si Refresh Token valide
       else {
         const accessToken = createJWT({ email : email, role : role })
+        req.email = email;
+        req.role = role;
         res.cookie("accessToken", accessToken, {
           expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
         });        
