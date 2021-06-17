@@ -1,0 +1,23 @@
+﻿<Window x:Class="Application_Lourde.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Application_Lourde"
+        mc:Ignorable="d"
+        Title="Login" Height="450" Width="800">
+    <Grid Margin="277,67,228,56">
+        <TextBox x:Name="textbox_email" HorizontalAlignment="Left" Margin="122,86,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="textbox_email_TextChanged"/>
+        <Label Content="Email" HorizontalAlignment="Left" Margin="61,82,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="textbox_password" HorizontalAlignment="Left" Margin="122,134,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="textbox_password_TextChanged"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="61,130,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cb_role" HorizontalAlignment="Left" Margin="122,191,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="cb_role_SelectionChanged">
+            <ComboBoxItem Content="Customer"/>
+            <ComboBoxItem Content="Restorer"/>
+            <ComboBoxItem Content="DeliveryMan"/>
+        </ComboBox>
+        <Label Content="Rôle" HorizontalAlignment="Left" Margin="61,184,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="button_connexion" Content="Connexion" HorizontalAlignment="Center" Margin="0,246,0,0" VerticalAlignment="Top" Click="button_connexion_Click"/>
+
+    </Grid>
+</Window>
