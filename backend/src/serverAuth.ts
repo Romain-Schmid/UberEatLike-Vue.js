@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Sensor from './models/sensor_models';
 require("dotenv").config();
 const express = require('express');
 const path = require('path');

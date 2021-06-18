@@ -28,8 +28,8 @@ var restaurantRouter = require('./routes/restaurant');
 var sponsorRouter = require('./routes/sponsorship');
 
 // Connection MongoDB
-// mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true,  useCreateIndex: true,
-// });
+mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true,  useCreateIndex: true, useFindAndModify: false
+});
 // const db_mongo = mongoose.connection;
 // db_mongo.on('error', console.error.bind(console, 'connection error:'));
 // db_mongo.once('open', function() {
@@ -37,13 +37,13 @@ var sponsorRouter = require('./routes/sponsorship');
 // });
 
 // Connection MySQL
-const db = require('./models');
-db.sequelize.authenticate()
-  .then(()=>console.log('MySQL connected...'))
-  .catch(err => console.log('Error : ' + err))
-db.sequelize.sync().then(() => {
-  console.log("Drop and re-sync db.");
-});
+// const db = require('./models');
+// db.sequelize.authenticate()
+//   .then(()=>console.log('MySQL connected...'))
+//   .catch(err => console.log('Error : ' + err))
+// db.sequelize.sync().then(() => {
+//   console.log("Drop and re-sync db.");
+// });
 
 
 //Create App with options
