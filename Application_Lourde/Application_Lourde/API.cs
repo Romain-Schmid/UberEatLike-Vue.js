@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Linq;
 
-namespace Gestion_app
+namespace Application_Lourde
 {
     public class User
     {
@@ -20,20 +20,34 @@ namespace Gestion_app
 
     }
 
-    public class APIcall
+    public class API
     {
-        static HttpClient client = new HttpClient(new HttpClientHandler { UseCookies = false });
-        static HttpClient clientlog = new HttpClient();
+        static HttpClient client { set; get; }
+        static HttpClient clientlog { set; get; }
 
-        public APIcall()
+        public API()
         {
-            client.BaseAddress = new Uri("http://78.123.229.253:3456/");
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client = new HttpClient(new HttpClientHandler { UseCookies = false });
+            clientlog = new HttpClient();
+            setConnection("auth", clientlog);
+        }
 
-            clientlog.BaseAddress = new Uri("http://78.123.229.253:4567/");
-            clientlog.DefaultRequestHeaders.Accept.Clear();
-            clientlog.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        public static void setConnection(string serv, HttpClient http, IEnumerable<string> cookies = null)
+        {
+            http.DefaultRequestHeaders.Clear();
+            if(serv == "auth")
+            {
+                http.BaseAddress = new Uri("http://78.123.229.253:4567/");
+                http.DefaultRequestHeaders.Accept.Clear();
+                http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            }else if (serv == "data" && cookies != null)
+            {
+                http.BaseAddress = new Uri("http://78.123.229.253:3456/");
+                http.DefaultRequestHeaders.Accept.Clear();
+                http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                http.DefaultRequestHeaders.Remove("Cookie");
+                http.DefaultRequestHeaders.Add("Cookie", cookies);
+            }
         }
 
         static void ShowMultipleUsers(List<User> users)
@@ -112,8 +126,7 @@ namespace Gestion_app
             if (response.Headers.SingleOrDefault(header => header.Key == "Set-Cookie").Value != null)
             {
                 IEnumerable<string> cookies = response.Headers.SingleOrDefault(header => header.Key == "Set-Cookie").Value;
-                client.DefaultRequestHeaders.Remove("Cookie");
-                client.DefaultRequestHeaders.Add("Cookie", cookies);
+                setConnection("data", client, cookies);
             }
         }
     }

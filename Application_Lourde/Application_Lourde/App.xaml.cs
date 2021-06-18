@@ -8,10 +8,13 @@ using System.Windows;
 
 namespace Application_Lourde
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
-    }
+		private void Application_Startup(object sender, StartupEventArgs e)
+		{
+			Model model = new Model();
+			Controller controller = new Controller(model);
+			controller.initialisation();
+		}
+	}
 }
