@@ -10,14 +10,10 @@ class AuthService {
         email: user.email,
         password: user.password,
         role: user.role
-      })
-      .then(headers => {
-        console.log(headers)
-        if (headers.accessToken) {
-          console.log(headers.accessToken)
-          localStorage.setItem('user', JSON.stringify(headers.data));
-        }
+      },{withCredentials: true})
+      .then(response => {
 
+        localStorage.setItem('user', JSON.stringify(user));
         return response.data;
       });
   }

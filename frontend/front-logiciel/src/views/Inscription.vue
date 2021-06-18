@@ -71,7 +71,7 @@ export default {
   },
   mounted() {
     if (this.loggedIn) {
-      this.$router.push('/profile');
+      this.$router.push('/');
     }
   },
   methods: {
