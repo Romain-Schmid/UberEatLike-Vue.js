@@ -1,0 +1,28 @@
+POST http://localhost:3000/auth/create
+Content-Type: application/json
+
+{
+    "email" : "axel.fradet@viacesi.fr",
+    "role" : "deliveryMan"
+}
+
+###
+
+POST http://localhost:3000/auth/signin
+Authorization: Bearer 
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYXhlbC5mcmFkZXRAdmlhY2VzaS5mciIsInJvbGUiOiJkZWxpdmVyeU1hbiJ9LCJpYXQiOjE2MjMzMzM0NjcsImV4cCI6MTYyMzMzNzA2N30.rZc7amx36NWQvHTDEJvFSq9BLTD-Qw9wHdN6ceZc__o
+
+Content-Type: application/json
+{
+    "email" : "axel.fradet@viacesi.fr",
+    "password" : "cesiteam"
+}
+
+###
+POST http://localhost:3000/login/create
+
+Content-Type: application/json
+{
+    "email" : "test@viacesi.fr",
+    "password" : "cesiteam"
+}
