@@ -1,24 +1,22 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+        <Sidebar/>
         <b-card class="mt-3" header="Form Data Result">
       <pre class="m-0">{{ user.role }}</pre>
     </b-card>
-    <b-button v-on:click="onLogout" variant="danger">Logout</b-button>
   </div>
   
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
 import User from '../models/user';
+import Sidebar from '../components/Sidebar.vue';
 
 export default {
   name: "Home",
-  components: {
-    HelloWorld,
+    components: {
+    Sidebar,
   },
   data() {
     return {
@@ -36,11 +34,6 @@ export default {
     }
       this.user = localStorage.getItem('user')
       this.user = this.user && JSON.parse(this.user)
-  },
-  methods: {
-      onLogout() {
-        this.$store.dispatch('auth/logout', this.user)
-      }
-    }
+  }
 };
 </script>
