@@ -34,6 +34,9 @@ export default {
     }
       this.user = localStorage.getItem('user')
       this.user = this.user && JSON.parse(this.user)
+    if (this.user.role != 'Restorer') {
+      this.$router.push('/');
+    }
   }
 };
 </script>
