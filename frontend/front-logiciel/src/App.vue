@@ -4,7 +4,8 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/connexion">Connexion</router-link> |
       <router-link to="/inscription">Inscription</router-link> |
-      <router-link to="/restaurateur">Restaurateur</router-link>
+      <router-link to="/restaurateur">Restaurateur</router-link> |
+      <router-link to="/client">Client</router-link>
     </div>
     <router-view />
   </div>
