@@ -1,38 +1,42 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_LOG = 'https://cesi.elective.fradetaxel.fr/auth/auth/login';
-const API_CREAT = 'http://cesi.elective.fradetaxel.fr/api/login/create';
+const API_LOG = "https://cesi.elective.fradetaxel.fr/auth/auth/login";
+const API_CREAT = "https://cesi.elective.fradetaxel.fr/api/login/create";
 
 class AuthService {
   login(user) {
     return axios
-      .post(API_LOG, {
-        email: user.email,
-        password: user.password,
-        role: user.role
-      },{withCredentials: true})
-      .then(response => {
-        console.log(response)
-        localStorage.setItem('user', JSON.stringify(user));
+      .post(
+        API_LOG,
+        {
+          email: user.email,
+          password: user.password,
+          role: user.role,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        console.log(response);
+        localStorage.setItem("user", JSON.stringify(user));
         return response.data;
       });
   }
 
   logout() {
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
   }
 
   register(user) {
     return axios({
-      method: 'post',
+      method: "post",
       url: API_CREAT,
       data: {
         username: user.username,
         email: user.email,
         password: user.password,
-        role: user.role
-      }
-  });
+        role: user.role,
+      },
+    });
   }
 }
 

@@ -2,7 +2,10 @@
   <div class="container">
     <b-container>
       <h1>Connexion</h1>
-      <p>Tu n'a pas encore de compte ? <router-link to="/inscription">Créer un compte</router-link></p>
+      <p>
+        Tu n'a pas encore de compte ?
+        <router-link to="/inscription">Créer un compte</router-link>
+      </p>
     </b-container>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
       <b-form-group
@@ -28,11 +31,15 @@
       </b-form-group>
 
       <b-form-select v-model="user.role" required class="mb-3">
-      <b-form-select-option :value="null">Please select an option</b-form-select-option>
-      <b-form-select-option value="Customer">Client</b-form-select-option>
-      <b-form-select-option value="DeliveryMan">Livreur</b-form-select-option>
-      <b-form-select-option value="Restorer">Restaurateur</b-form-select-option>
-    </b-form-select>
+        <b-form-select-option :value="null"
+          >Please select an option</b-form-select-option
+        >
+        <b-form-select-option value="Customer">Client</b-form-select-option>
+        <b-form-select-option value="DeliveryMan">Livreur</b-form-select-option>
+        <b-form-select-option value="Restorer"
+          >Restaurateur</b-form-select-option
+        >
+      </b-form-select>
 
       <b-button type="submit" variant="primary">Submit</b-button>
       <b-button type="button" variant="danger">Reset</b-button>
@@ -44,46 +51,45 @@
 </template>
 
 <script>
-import User from '../models/user.js';
+import User from "../models/user.js";
 //import authHeader from '../services/auth-header';
 
-
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
-      user: new User('', ''),
+      user: new User("", ""),
       show: true,
     };
   },
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
-    }
+    },
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/');
+      this.$router.push("/");
     }
   },
   methods: {
     onSubmit(event) {
       event.preventDefault();
-      this.$store.dispatch('auth/login', this.user).then(
-        data => {
-              this.message = data.message;
-              this.successful = true;
-              alert(JSON.stringify(this.message))
-            },
-            error => {
-              this.loading = false;
-              this.message =
-                (error.response && error.response.data) ||
-                error.message ||
-                error.toString();
-            }
-          );
+      this.$store.dispatch("auth/login", this.user).then(
+        (data) => {
+          this.message = data.message;
+          this.successful = true;
+          alert(JSON.stringify(this.message));
         },
+        (error) => {
+          this.loading = false;
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
     onReset(event) {
       event.preventDefault();
       // Reset our form values

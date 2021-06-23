@@ -4,10 +4,15 @@
     <b-sidebar id="sticky-sidebar" title="Sidebar">
       <div class="sticky-top">
         <p>
-          Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-          in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+          Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+          dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
+          consectetur ac, vestibulum at eros.
         </p>
-        <b-img src="https://picsum.photos/500/500/?image=54" fluid thumbnail></b-img>
+        <b-img
+          src="https://picsum.photos/500/500/?image=54"
+          fluid
+          thumbnail
+        ></b-img>
       </div>
     </b-sidebar>
   </div>
