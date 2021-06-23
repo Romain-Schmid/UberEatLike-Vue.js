@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_LOG = 'http://fradetaxel.fr:4567/auth/login';
-const API_CREAT = 'http://fradetaxel.fr:3456/login/create';
+const API_LOG = 'https://cesi.elective.fradetaxel.fr/auth/auth/login';
+const API_CREAT = 'http://cesi.elective.fradetaxel.fr/api/login/create';
 
 class AuthService {
   login(user) {
@@ -12,7 +12,7 @@ class AuthService {
         role: user.role
       },{withCredentials: true})
       .then(response => {
-
+        console.log(response)
         localStorage.setItem('user', JSON.stringify(user));
         return response.data;
       });
