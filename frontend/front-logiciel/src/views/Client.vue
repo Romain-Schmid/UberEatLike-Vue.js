@@ -3,6 +3,7 @@
         <Sidebar/>
         <b-card class="mt-3" header="Form Data Result">
       <pre class="m-0">{{ user.role }}</pre>
+      <p> Liste des restaurants : {{listRestaurant}}</p>
     </b-card>
   </div>
   
@@ -22,7 +23,7 @@ export default {
   data() {
     return {
       user: new User,
-      listRestaurant : new Array, 
+      listRestaurant : null, 
     };
   },
   computed: {
@@ -37,7 +38,6 @@ export default {
       this.user = localStorage.getItem('user')
       this.user = this.user && JSON.parse(this.user)
       this.listRestaurant = getRestaurant.getAllRestaurants();
-      //foreach(restaurant in )
     }
   }
 };
