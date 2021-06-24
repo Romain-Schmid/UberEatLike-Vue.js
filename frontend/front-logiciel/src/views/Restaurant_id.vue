@@ -1,10 +1,7 @@
 <template>
-  <div class="home">
-        <Sidebar/>
-        <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ user.role }}</pre>
-      <p> Liste des restaurants : {{listRestaurant}}</p>
-    </b-card>
+  <div class="home">    
+    <p>ID : {{this.$route.params.id}} est le restaurant {{restaurant.titre}}</p>
+    
   </div>
   
 </template>
@@ -13,18 +10,18 @@
 // @ is an alias to /src
 import User from '../models/user';
 import getRestaurant from '../services/restaurant.services.js';
-import Sidebar from '../components/Sidebar.vue';
 
 export default {
   name: "Home",
     components: {
-    Sidebar,
   },
   data() {
     return {
       user: new User,
-      listRestaurant : null, 
+      restaurant : [], 
     };
+  },
+  methods: {
   },
   computed: {
     currentUser() {
@@ -37,8 +34,12 @@ export default {
     }else{
       this.user = localStorage.getItem('user')
       this.user = this.user && JSON.parse(this.user)
-      this.listRestaurant = getRestaurant.getAllRestaurants();
+      getRestaurant.getOneRestaurant(this.$route.params.id).then( data => { this.restaurant = data})
     }
   }
 };
 </script>
+
+<style scoped>
+
+</style>
