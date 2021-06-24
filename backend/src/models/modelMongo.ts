@@ -6,9 +6,12 @@ const restaurantSchema : Schema = new Schema({
     titre : {type : String, required : true},
     type : {type : String, required : true},
     owner : {type : String, required : true},
+    rue : {type : String, required : true},
+    ville : {type : String, required : true},
+    pays : {type : String, required : true},
     note : {type : Number, required : true},
     description : {type : String, required : true},
-    picture : {type : String, required : true},
+    picture : {type : String, required : false},
     menu: [{ type: Schema.Types.ObjectId, ref: 'Menu' }],
     article: [{ type: Schema.Types.ObjectId, ref: 'Article' }]
 
@@ -18,6 +21,9 @@ export interface IRestaurant extends Document {
   titre : string,
   type : string,
   owner : string,
+  rue : string,
+  ville : string,
+  pays : string,
   note : number,
   description : string,
   picture : string,
@@ -55,7 +61,6 @@ export interface IMenu extends Document {
 }
 var MMenu = mongoose.model<IMenu>('Menu', menuSchema);
 
-
 const articleSchema : Schema = new Schema({
     titre : {type : String, required : true},
     id_restaurant : {type : String, required : true},
@@ -76,6 +81,38 @@ export interface IArticle extends Document {
 var MArticle = mongoose.model<IArticle>('Article', articleSchema);
 
 
+const orderSchema : Schema = new Schema({
+  content : {type : [String], required : true},
+  id_restaurant : { type: Schema.Types.ObjectId, ref: 'Restaurant', required: true},
+  email_customer : {type : String, required : true},
+  email_delivery : {type : String, required : false, default : null},
+  prix : {type : Number, required : true},
+  status : {type : String, required : true, default : "unpaid"},
+});
+export interface IOrder extends Document {
+content : [string],
+id_restaurant : {
+  type : Schema.Types.ObjectId,
+  ref : "Restaurant"
+},
+email_customer : string,
+email_delivery : string,
+prix : number,
+status : string,
+}
+var MOrder = mongoose.model<IOrder>('Order', orderSchema);
 
-module.exports  = {Restaurant : MRestaurant, Menu : MMenu, Article : MArticle}
+const sponsorSchema : Schema = new Schema({
+  email_user : {type : String, required : true},
+  email_friend : {type : String, required : true},
+});
+export interface ISponsor extends Document {
+  email_user : String,
+  email_friend : string,
+}
+var MSponsor = mongoose.model<ISponsor>('Sponsor', sponsorSchema);
+
+
+
+module.exports  = {Restaurant : MRestaurant, Menu : MMenu, Article : MArticle, Order : MOrder, Sponsor : MSponsor}
     

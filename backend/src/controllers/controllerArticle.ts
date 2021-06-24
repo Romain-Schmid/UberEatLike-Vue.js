@@ -1,5 +1,5 @@
 export {};
-const { Article } = require('../models/modelMongo');
+const { Article, Menu } = require('../models/modelMongo');
 
 
 
@@ -46,7 +46,9 @@ exports.update = async (req, res) => {
     .catch(error => res.status(400).json({ error }));
 };
 
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
+  const menuTest = await Menu.deleteMany({ article : req.params.id_article});
+
 	Article.deleteOne({_id : req.params.id_article, id_restaurant : req.params.id_rest})
   .then(response => {
     if (response.deletedCount == 1) {

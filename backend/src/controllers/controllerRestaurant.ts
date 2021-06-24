@@ -10,7 +10,7 @@ const addArticleToMenu = function(ArticleId, MenuId) {
         article: ArticleId
       } 
     }, { new: true }
-  );
+  ).populate('article');
 };
 
 const addArticleToRestaurant = function(ArticleId, RestaurantId, owner) {
@@ -20,7 +20,7 @@ const addArticleToRestaurant = function(ArticleId, RestaurantId, owner) {
         article: ArticleId
       } 
     }, { new: true }
-  );
+  ).populate('article');
 };
 
 const addMenuToRestaurant = function(MenuId, RestaurantId, owner) {
@@ -30,7 +30,7 @@ const addMenuToRestaurant = function(MenuId, RestaurantId, owner) {
         menu: MenuId
       } 
     }, { new: true }
-  );
+  ).populate('menu');
 };
 
 // Create and Save a new Restaurant
@@ -44,11 +44,14 @@ exports.create = (req, res) => {
     description: req.body.description,
     owner : req.email,
     picture : req.body.picture,
+    pays : req.body.pays,
+    ville : req.body.ville,
+    rue : req.body.rue
   });
 
   rest.save()
     .then(data => {
-      res.send(data);
+      res.status(200).send(data);
     })
     .catch(err => {
       res.status(500).send({
@@ -78,10 +81,10 @@ exports.createMenu = async (req, res) => {
     const tutorial = await addArticleToMenu(article[i], newMenu._id)
   }
   
-  const menuUpdate = await Menu.findById(newMenu._id)
+  const menuUpdate = await Menu.findById(newMenu._id).populate('article')
   addMenuToRestaurant(menuUpdate._id, id_rest, owner)
     .then(data => {
-      res.send(data);
+      res.send(menuUpdate);
     })
     .catch(err => {
       res.status(500).send({
@@ -122,7 +125,7 @@ exports.createArticle = async (req, res) => {
 exports.getAll = (req, res) => {
   Restaurant.find({})
     .then(data => {
-      res.send(data);
+      res.json(data);
     })
     .catch(err => {
       res.status(500).send({

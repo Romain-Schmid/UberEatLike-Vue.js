@@ -6,6 +6,14 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan');
 const log = require('./modules/logger')
 const { checkJWT } = require('./modules/jwt');
+var cors = require('cors')
+
+var corsOptions = {
+  origin: ['http://78.123.229.253:443', 'http://localhost:8080', 'http://localhost:8081', 'https://cesi.elective.dev.fradetaxel.fr'],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  optionsSuccessStatus: 200,
+  credentials : true
+}
 
 //Import routes 
 var authRouter = require('./routes/auth')
@@ -20,23 +28,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use((req, res, next) => {
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+app.use(cors(corsOptions))
+// app.use((req, res, next) => {
+//     // Website you wish to allow to connect
+//     res.setHeader('Access-Control-Allow-Origin', 'http://78.123.229.253:8083');
 
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//     // Request methods you wish to allow
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//     // Request headers you wish to allow
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
+//     // Set to true if you need the website to include cookies in the requests sent
+//     // to the API (e.g. in case you use sessions)
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+//   next();
+// });
 
-app.use('/auth', authRouter);
+app.use('/auth/auth', authRouter);
 
 const port = 4000;
 

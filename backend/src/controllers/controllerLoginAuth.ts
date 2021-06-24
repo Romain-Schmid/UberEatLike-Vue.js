@@ -7,28 +7,6 @@ const User = db_sql.model.User;
 const { createJWT, createRefreshJWT } = require('../modules/jwt');
 
 // Create and Save a new User
-exports.create = (req, res) => {
-      // Create a User
-      const user = {
-        email : req.body.email,
-        username: req.body.username,
-        password: req.body.password,
-        role: req.body.role,
-      };
-    
-      // Save User in the database
-      User.create(user)
-        .then(data => {
-          res.send(data);
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while creating the user."
-          });
-        });
-};
-
 exports.createAccount =async (req, res) => {
   console.log(req.body)
   try {
@@ -41,10 +19,11 @@ exports.createAccount =async (req, res) => {
     };
     User.create(user)
     .then(data => {
-      res.send(data);
+      res.status(200).send(data);
     })
     .catch(err => {
-      res.status(500).send({
+      console.log(err)
+      return res.status(500).send({
         message:
           err.message || "Some error occurred while creating the user."
       });
@@ -66,14 +45,18 @@ exports.loginAccount = async (req, res) => {
           let refreshToken = await createRefreshToken( email, role );
           res.cookie("accessToken", accessToken, {
             expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
-            // httpOnly: true,
-            // secure: true,
-            // sameSite: "strict",
+            httpOnly: false,
+            secure: true,
+            sameSite: "none",
           });
           res.cookie("refreshToken", refreshToken, {
             expires: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
+            httpOnly: false,
+            secure: true,
+            sameSite: "none",
           });
           res.set({accessToken : accessToken}).json({message : 'Vous êtes connecté'})
+          res.end();
       }else{
         return res.send('Not Allowed')
       }
@@ -82,8 +65,8 @@ exports.loginAccount = async (req, res) => {
   }
 };
 
-exports.logout = async (req, res ) => {    
-  const {email, role} = req.body;
+exports.logout = async (req, res ) => {  
+  const {email, role} = req;
   console.log(email)
   const user = Boolean(Number(await User.update({ refreshToken : null}, {where : {email : email, role: role}})));
   if(!user){
@@ -95,39 +78,12 @@ exports.logout = async (req, res ) => {
   res.status(200).send('Logout');
 };
 
-// Retrieve all Users from the database.
-exports.findAll = (req, res) => {
-  User.findAll()
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving users."
-      });
-    });
-};
 
-// Find a single User with an id
-exports.findOne = (req, res) => {
-  const id = req.params.id;
-
-  User.findByPk(id)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error retrieving users with id=" + id
-      });
-    });
-};
 
 // Find me with email
 exports.findMe = (req, res) => {
-  const email = req.user.email;
-  User.findOne({ where : {email : email }})
+  const {email, role} = req;
+  User.findOne({ where : {email : email, role : role }})
     .then(data => {
       res.send(data);
     })
@@ -140,18 +96,17 @@ exports.findMe = (req, res) => {
 
 // Update a User by the id in the request
 exports.update = async (req, res) => {
-  const email = req.email;
+  const {email, role} = req;
   const user = {
     email : email,
     username: req.body.username,
-    role: req.body.role,
+    role: role,
   };
 
   if(req.body.password){
     const hashedPassword = await bcrypt.hash( req.body.password, 10)
     user['password'] = hashedPassword;
   }
-  console.log(user)
 
   User.update(user, {
     where: { email: email }
@@ -170,31 +125,6 @@ exports.update = async (req, res) => {
     .catch(err => {
       res.status(500).send({
         message: "Error updating user with email=" + email
-      });
-    }); 
-};
-
-// Update a User by the id in the request
-exports.updateParam = (req, res) => {
-  const id = req.params.id;
-
-  User.update(req.body, {
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "User was updated successfully."
-        });
-      } else {
-        res.send({
-          message: `Cannot update user with id=${id}. Maybe user was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating user with id=" + id
       });
     }); 
 };
@@ -225,26 +155,9 @@ exports.delete = (req, res) => {
     });
 };
 
-// Delete all Users from the database.
-exports.deleteAll = (req, res) => {
-    User.destroy({
-        where: {},
-        truncate: false
-      })
-        .then(nums => {
-          res.send({ message: `${nums} Users were deleted successfully!` });
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while removing all Users."
-          });
-        });
-};
-
-// Find all published Users
-exports.findAllPublished = (req, res) => {
-    User.findAll({ where: { published: true } })
+// Retrieve all Users from the database.
+exports.findAll = (req, res) => {
+  User.findAll()
     .then(data => {
       res.send(data);
     })
@@ -255,6 +168,83 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
+
+// Find a single User with an id
+exports.findOne = (req, res) => {
+  const id = req.params.id;
+  User.findByPk(id)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error retrieving users with id=" + id
+      });
+    });
+};
+
+// Update a User by the id in the request
+exports.updateAccount = async (req, res) => {
+  const id = req.params.id;
+  const user = req.body;
+
+  if(req.body.email){
+    return res.status(401).send()
+  }
+
+  if(req.body.password){
+    const hashedPassword = await bcrypt.hash( user.password, 10)
+    user['password'] = hashedPassword;
+  }
+
+  User.update(user, {
+    where: { id: id }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "User was updated successfully."
+        });
+      } else {
+        res.send({
+          message: `Cannot update user with id=${id}. Maybe user was not found or req.body is empty!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error updating user with id=" + id
+      });
+    }); 
+};
+
+// Delete a User with the specified id in the request
+exports.deleteAccount = (req, res) => {
+  const id = req.params.id;
+
+  User.destroy({
+    where : {id : id}
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "User was deleted successfully!"
+        });
+      } else {
+        res.send({
+          message: `Cannot delete User with id=${id}. Maybe User was not found!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Could not delete User with id=" + id
+      });
+    });
+};
+
+
+
 
 async function createRefreshToken(email : string, role : string){
   const refreshToken = createRefreshJWT({ email : email, role : role })
