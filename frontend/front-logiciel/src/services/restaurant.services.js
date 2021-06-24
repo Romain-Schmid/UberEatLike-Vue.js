@@ -13,6 +13,16 @@ class RestaurantService {
       return axios.get(API_URL + "/get/" + id, {withCredentials: true})
       .then(res => {return res.data})
     }
+
+    getMenus(id){
+      return axios.get(API_URL + "/" + id + "/menu", {withCredentials: true})
+      .then(res => {return res.data})
+    }
+
+    getArticles(id){
+      return axios.get(API_URL + "/" + id + "/article", {withCredentials: true})
+      .then(res => {return res.data})
+    }
 }
 
 export default new RestaurantService();

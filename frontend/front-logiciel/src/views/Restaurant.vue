@@ -14,7 +14,7 @@
             class="mb-2"
           >
             <b-card-text>
-              {{restaurant.description}} : ID est {{restaurant._id}}
+              {{restaurant.description}}
             </b-card-text>
 
             <b-button v-bind:href="'/restaurant/' + restaurant._id" variant="success"> Commander </b-button>
@@ -64,6 +64,7 @@ export default {
 .card-deck{
   align-items: center;
   justify-content: center;
+  column-gap : 2em;
 }
 
 .card{
