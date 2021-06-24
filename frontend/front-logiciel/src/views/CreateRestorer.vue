@@ -184,7 +184,21 @@ export default {
     },
     onSubmit(event) {
       event.preventDefault();
-      alert(JSON.stringify(this.form));
+      this.$store.dispatch("restorer/create", this.form).then(
+        (data) => {
+          this.message = data.message;
+          this.successful = true;
+          alert("Successe")
+          this.$router.push("/restaurateur");
+        },
+        (error) => {
+          this.loading = false;
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
     },
   },
 };
