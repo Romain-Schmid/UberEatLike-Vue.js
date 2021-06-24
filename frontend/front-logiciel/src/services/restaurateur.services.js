@@ -1,5 +1,4 @@
 import axios from "axios";
-import authHeader from "./auth-header";
 
 const API_URL = "https://cesi.elective.fradetaxel.fr/api/restaurant/";
 
@@ -24,16 +23,16 @@ class RestorerService {
       });
   }
 
-  getUserBoard() {
-    return axios.get(API_URL + "user", { headers: authHeader() });
+  getMine() {
+    return axios.get(API_URL + "getMine", { withCredentials: true });
   }
 
   getModeratorBoard() {
-    return axios.get(API_URL + "mod", { headers: authHeader() });
+    return axios.get(API_URL + "mod", { withCredentials: true });
   }
 
   getAdminBoard() {
-    return axios.get(API_URL + "admin", { headers: authHeader() });
+    return axios.get(API_URL + "admin", { withCredentials: true });
   }
 }
 

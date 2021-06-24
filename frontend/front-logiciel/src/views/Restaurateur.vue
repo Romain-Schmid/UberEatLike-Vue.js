@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <Sidebar />
+    <OwnRestaurant />
     <b-card class="mt-3" header="Form Data Result">
       <pre class="m-0">{{ user.role }}</pre>
     </b-card>
@@ -11,11 +12,13 @@
 // @ is an alias to /src
 import User from "../models/user";
 import Sidebar from "../components/Sidebar.vue";
+import OwnRestaurant from "../components/OwnRestaurant.vue"
 
 export default {
   name: "Home",
   components: {
     Sidebar,
+    OwnRestaurant,
   },
   data() {
     return {
