@@ -21,7 +21,8 @@
               </ul>
             </b-card-text>
 
-            <b-button href="" variant="success"> Commander </b-button>
+            <b-button href="" variant="success"> Ajouter </b-button>
+            <b-form-spinbutton id="sb-inline"  min="0" max="10"  placeholder="0" inline></b-form-spinbutton>
           </b-card>
         </div>
       </b-card-group>
@@ -42,14 +43,20 @@
             <b-card-text>
               {{article.description}}  
             </b-card-text>
-
-            <b-button href="" variant="success"> Commander </b-button>
+              <b-button  v-on:click="AddOrder(article._id, article.titre, responses[article._id], article.prix)" variant="success"> Ajouter </b-button>
+              <b-form-spinbutton  min="0" max="10" placeholder="0" v-model="responses[article._id]" inline></b-form-spinbutton>
           </b-card>
         </div>
       </b-card-group>
     </div>
+
+    <h1>Panier</h1>
+    <p v-for="article in listOrder" :key="article.titre">
+      Titre : {{article.titre}}, ID: {{article.id}}, Prix: {{article.price}}, Nombre : {{article.nb}}
+    </p>
+
   </div>
-  
+
 </template>
 
 <script>
@@ -66,9 +73,21 @@ export default {
       user: new User,
       listMenus : [], 
       listArticles :[],
+      responses: {},
+      listOrder : [],
     };
   },
   methods: {
+    AddOrder(id, titre, nb, price){
+      var article = this.listOrder.find(article => article.id === id)
+
+      if(article != null){
+        article.nb += nb;
+      }else{
+        var feed = {id: id, titre: titre, nb: nb, price: price}
+        this.listOrder.push(feed)
+      }
+    }
   },
   computed: {
     currentUser() {
