@@ -24,18 +24,27 @@ class RestorerService {
   }
 
   getMine() {
-    return axios.get(API_URL + "getMine", { withCredentials: true })
-    .then(res => {return res.data});
+    return axios
+      .get(API_URL + "getMine", { withCredentials: true })
+      .then((res) => {
+        return res.data;
+      });
   }
 
-  getMenus(id){
-    return axios.get(API_URL +  id + "/menu", {withCredentials: true})
-    .then(res => {return res.data})
+  getMenus(id) {
+    return axios
+      .get(API_URL + id + "/menu", { withCredentials: true })
+      .then((res) => {
+        return res.data;
+      });
   }
 
-  getArticles(id){
-    return axios.get(API_URL +  id + "/article", {withCredentials: true})
-    .then(res => {return res.data})
+  getArticles(id) {
+    return axios
+      .get(API_URL + id + "/article", { withCredentials: true })
+      .then((res) => {
+        return res.data;
+      });
   }
 }
 

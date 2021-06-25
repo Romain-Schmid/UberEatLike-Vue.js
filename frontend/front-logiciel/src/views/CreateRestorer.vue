@@ -123,11 +123,6 @@
 
       <b-button type="submit" variant="success">Envoyer</b-button>
     </b-form>
-
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ form }}</pre>
-    </b-card>
-    <b-button v-on:click="onLogout" variant="danger">Logout</b-button>
   </div>
 </template>
 
@@ -188,7 +183,7 @@ export default {
         (data) => {
           this.message = data.message;
           this.successful = true;
-          alert("Successe")
+          alert("Successe");
           this.$router.push("/restaurateur");
         },
         (error) => {
@@ -241,6 +236,7 @@ h1 {
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
+  margin-bottom: 10px;
   border: 3px solid #42b983;
   padding: 1%;
 }
