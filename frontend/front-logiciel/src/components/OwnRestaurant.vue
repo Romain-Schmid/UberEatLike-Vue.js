@@ -16,7 +16,7 @@
             <b-card-text>
               {{restaurant.description}} : ID est {{restaurant._id}}
             </b-card-text>
-            <b-button v-bind:href="'/restaurant/' + restaurant._id" variant="success"> Commander </b-button>
+            <b-button v-bind:href="'/restaurateur/' + restaurant._id" variant="success"> Modifier </b-button>
           </b-card>
         </div>
       </b-card-group>

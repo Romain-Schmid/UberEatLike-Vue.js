@@ -22,7 +22,7 @@
 export default {
   name: "Sidebar",
   /*props: {
-    msg: String,
+    key: String,
   },*/
 };
 </script>

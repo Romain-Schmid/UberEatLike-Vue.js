@@ -1,10 +1,8 @@
 <template>
   <div class="home">
+    <h1>Choisissez votre restaurant</h1>
     <Sidebar />
     <OwnRestaurant />
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ user.role }}</pre>
-    </b-card>
   </div>
 </template>
 

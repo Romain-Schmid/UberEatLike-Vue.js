@@ -24,15 +24,18 @@ class RestorerService {
   }
 
   getMine() {
-    return axios.get(API_URL + "getMine", { withCredentials: true });
+    return axios.get(API_URL + "getMine", { withCredentials: true })
+    .then(res => {return res.data});
   }
 
-  getModeratorBoard() {
-    return axios.get(API_URL + "mod", { withCredentials: true });
+  getMenus(id){
+    return axios.get(API_URL +  id + "/menu", {withCredentials: true})
+    .then(res => {return res.data})
   }
 
-  getAdminBoard() {
-    return axios.get(API_URL + "admin", { withCredentials: true });
+  getArticles(id){
+    return axios.get(API_URL +  id + "/article", {withCredentials: true})
+    .then(res => {return res.data})
   }
 }
 
