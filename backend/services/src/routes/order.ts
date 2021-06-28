@@ -11,6 +11,7 @@ var secureCustomer = async function (req,res,next) {
     next();
 }
 
+
 var secureRestorer = async function (req,res,next) {
     if(req.role != "Restorer"){
         return res.status(400).send("Action non authorisé avec votre rôle")

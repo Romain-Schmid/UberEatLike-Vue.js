@@ -1,0 +1,18 @@
+version: '3'
+services:
+  nginx_load_balancer:
+    image: nginx
+    volumes:
+      - './nginx/default.conf:/etc/nginx/nginx.conf'
+    ports:
+      - '4010:80'
+  auth1:
+    build: ./
+    environment: 
+      - APPID=1111
+  auth2:
+    build: ./
+    environment: 
+      - APPID=2222
+
+
