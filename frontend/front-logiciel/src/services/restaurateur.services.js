@@ -74,6 +74,24 @@ class RestorerService {
         return res.data;
       });
   }
+
+  postArticle(form, id){
+    return axios
+      .post(
+        API_URL + id +'/article',
+        {
+          titre: form.titre,
+          description: form.description,
+          type: form.type,
+          prix: form.prix,
+          picture: form.picture,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        return response.data;
+      });
+  }
 }
 
 export default new RestorerService();

@@ -26,6 +26,14 @@
       </b-card-group>
     </div>
     <h1>Articles :</h1>
+    <b-button
+              class="button"
+              id="Create"
+              v-bind:href="'/restaurateur/'+this.$route.params.id+'/createArticle'"
+              variant="success"
+            >
+              Créez un artcile
+    </b-button>
     <div class="list">
       <b-card-group deck>
         <div v-for="article in listArticles" :key="article.titre">
