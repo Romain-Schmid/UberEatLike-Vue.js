@@ -4,7 +4,7 @@ const controllerOrder = require('../controllers/controllerOrder.ts')
 var router = Router();
 
 //Middleware 
-var secureCustomer = async function (req,res,next) {
+var secureCustomer = async function (req : any, res : any, next : any) {
     if(req.role != "Customer"){
         return res.status(400).send("Action non authorisé avec votre rôle")
     }    
@@ -12,21 +12,21 @@ var secureCustomer = async function (req,res,next) {
 }
 
 
-var secureRestorer = async function (req,res,next) {
+var secureRestorer = async function (req : any, res : any, next : any) {
     if(req.role != "Restorer"){
         return res.status(400).send("Action non authorisé avec votre rôle")
     }    
     next();
 }
 
-var secureDeliveryMan = async function (req,res,next) {
+var secureDeliveryMan = async function (req : any, res : any, next : any) {
     if(req.role != "DeliveryMan"){
         return res.status(400).send("Action non authorisé avec votre rôle")
     }    
     next();
 }
 
-router.get("/", (req, res) => {
+router.get("/", (req : any, res : any) => {
     res.send('Bienvenue sur Order')
 })
 

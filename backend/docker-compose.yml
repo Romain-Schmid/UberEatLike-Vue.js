@@ -5,29 +5,37 @@ services:
     volumes:
       - './nginx/default.conf:/etc/nginx/nginx.conf'
     ports:
-      - '4010:80'
+      - '4000:80'
   auth1:
     build: ./authentification
     environment: 
       - APPID=1111
+    volumes: 
+      - ./authentification/src:/usr/app/src
   auth2:
     build: ./authentification
     environment: 
       - APPID=2222
+    volumes: 
+      - ./authentification/src:/usr/app/src
   nginx_load_balancer2:
     image: nginx
     volumes:
       - './nginx/default2.conf:/etc/nginx/nginx.conf'
     ports:
-      - '3010:80'
+      - '3000:80'
   service1:
     build: ./services
     environment: 
       - APPID=3333
+    volumes: 
+      - ./services/src:/usr/app/src
   service2:
     build: ./services
     environment: 
       - APPID=4444
+    volumes: 
+      - ./services/src:/usr/app/src
     
 
 

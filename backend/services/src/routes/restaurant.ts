@@ -10,34 +10,37 @@ const { Restaurant } = require('../models/modelMongo');
 var router = Router();
 
 //Middleware 
-var secureRole = async function (req,res,next) {
+var secureRole = async function (req : any, res : any, next : any) {
     if(req.role != "Restorer"){
-        return res.status(400).send("Action non authorisé avec votre rôle")
+        return res.status(400).send("Action non authorisée avec votre rôle")
     }    
     next();
 }
 
 //Middleware
-var secureOwner = async function (req, res, next, id) {
+var secureOwner = async function (req : any, res : any, next : any) {
     const user = req.email;
+    const id = req.params.id_rest
+    console.log(id)
     Restaurant.findById(id)
-    .then(data => {
+    .then((data : any) => {
         if( user != data.owner){
-            return res.status(400).send("Action non authorisé avec email")
+            return res.status(400).send("Action non authorisée avec email")
         }       
     })
-    .catch(err => {
-        return res.status(500).send({
-        message:
-        err.message || "Some error occurred while retrieving Article."
-    });
+    .catch((err: any) => 
+        {
+            return res.status(500).send({
+            message:
+            err.message || "Some error occurred while retrieving Article."
+        });
     });
 
     next();
 }
 
 
-router.get("/", (req, res) => {
+router.get("/", (req : any, res : any) => {
     res.send('Bienvenue sur restaurant')
 })
 
@@ -60,23 +63,23 @@ router.use(secureRole)
 router.post("/create", controllerRestaurant.create)
 router.get("/getMine", controllerRestaurant.getMine)
 
-router.param('id_rest', (req, res, next, id) => {
-    secureOwner(req, res, next, id);
-  })
+// router.param('id_rest', (req : any, res : any, next : any, id : string) => {
+//     secureOwner(req, res, next, id);
+//   })
 
 
 //Edit Restaurant
-router.put("/:id_rest", controllerRestaurant.update)
-router.delete("/:id_rest", controllerRestaurant.delete)
+router.put("/:id_rest", secureOwner, controllerRestaurant.update)
+router.delete("/:id_rest", secureOwner, controllerRestaurant.delete)
 
 //Edit Menu
-router.post("/:id_rest/menu", controllerRestaurant.createMenu)
-router.put("/:id_rest/menu/:id_menu", controllerMenu.update)
-router.delete("/:id_rest/menu/:id_menu", controllerMenu.delete)
+router.post("/:id_rest/menu", secureOwner, controllerRestaurant.createMenu)
+router.put("/:id_rest/menu/:id_menu", secureOwner,  controllerMenu.update)
+router.delete("/:id_rest/menu/:id_menu", secureOwner, controllerMenu.delete)
 
 //Edit Articles
-router.post("/:id_rest/article", controllerRestaurant.createArticle)
-router.put("/:id_rest/article/:id_article", controllerArticle.update)
-router.delete("/:id_rest/article/:id_article", controllerArticle.delete)
+router.post("/:id_rest/article", secureOwner, controllerRestaurant.createArticle)
+router.put("/:id_rest/article/:id_article", secureOwner, controllerArticle.update)
+router.delete("/:id_rest/article/:id_article", secureOwner, controllerArticle.delete)
 
 module.exports = router;

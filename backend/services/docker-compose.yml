@@ -7,12 +7,19 @@ services:
     ports:
       - '3010:80'
   service1:
-    build: ./
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment: 
       - APPID=3333
+    volumes:
+      - ./src:/usr/app/src
   service2:
-    build: ./
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment: 
       - APPID=4444
-
+    volumes:
+      - ./src:/usr/app/src
 

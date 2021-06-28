@@ -1,5 +1,5 @@
 import jwt_decode from "jwt-decode";
-
+import {user} from "../models/object";
 export {};
 const bcrypt = require('bcrypt')
 const db_sql = require("../models");
@@ -7,7 +7,7 @@ const User = db_sql.model.User;
 const { createJWT, createRefreshJWT } = require('../modules/jwt');
 
 // Create and Save a new User
-exports.createAccount =async (req, res) => {
+exports.createAccount =async (req : any, res: any) => {
   console.log(req.body)
   try {
     const hashedPassword = await bcrypt.hash( req.body.password, 10)
@@ -18,10 +18,10 @@ exports.createAccount =async (req, res) => {
       role: req.body.role,
     };
     User.create(user)
-    .then(data => {
+    .then((data : any) => {
       res.status(200).send(data);
     })
-    .catch(err => {
+    .catch((err : any) => {
       console.log(err)
       return res.status(500).send({
         message:
@@ -33,7 +33,7 @@ exports.createAccount =async (req, res) => {
   }
 };
 
-exports.loginAccount = async (req, res) => {
+exports.loginAccount = async (req : any, res: any) => {
   const {email, role, password} = req.body;
   const user = await User.findOne({ where : {email : email, role : role }})
   if(user == null){
@@ -65,7 +65,7 @@ exports.loginAccount = async (req, res) => {
   }
 };
 
-exports.logout = async (req, res ) => {  
+exports.logout = async (req : any, res: any ) => {  
   const {email, role} = req;
   console.log(email)
   const user = Boolean(Number(await User.update({ refreshToken : null}, {where : {email : email, role: role}})));
@@ -81,13 +81,13 @@ exports.logout = async (req, res ) => {
 
 
 // Find me with email
-exports.findMe = (req, res) => {
+exports.findMe = (req : any, res: any) => {
   const {email, role} = req;
   User.findOne({ where : {email : email, role : role }})
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err : any) => {
       res.status(500).send({
         message: "DOn't find your profil"
       });
@@ -95,9 +95,9 @@ exports.findMe = (req, res) => {
 };
 
 // Update a User by the id in the request
-exports.update = async (req, res) => {
+exports.update = async (req : any, res: any) => {
   const {email, role} = req;
-  const user = {
+  const user : user = {
     email : email,
     username: req.body.username,
     role: role,
@@ -111,7 +111,7 @@ exports.update = async (req, res) => {
   User.update(user, {
     where: { email: email }
   })
-    .then(num => {
+    .then((num : any) => {
       if (num == 1) {
         res.send({
           message: "User was updated successfully."
@@ -122,7 +122,7 @@ exports.update = async (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch((err : any) => {
       res.status(500).send({
         message: "Error updating user with email=" + email
       });
@@ -131,13 +131,13 @@ exports.update = async (req, res) => {
 
 
 // Delete a User with the specified id in the request
-exports.delete = (req, res) => {
+exports.delete = (req : any, res: any) => {
   const {email, role} = req;
 
   User.destroy({
     where : {email : email, role: role}
   })
-    .then(num => {
+    .then((num : any) => {
       if (num == 1) {
         res.send({
           message: "User was deleted successfully!"
@@ -148,7 +148,7 @@ exports.delete = (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch((err : any) => {
       res.status(500).send({
         message: "Could not delete User with email=" + email
       });
@@ -156,12 +156,12 @@ exports.delete = (req, res) => {
 };
 
 // Retrieve all Users from the database.
-exports.findAll = (req, res) => {
+exports.findAll = (req : any, res: any) => {
   User.findAll()
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err : any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving users."
@@ -170,13 +170,13 @@ exports.findAll = (req, res) => {
 };
 
 // Find a single User with an id
-exports.findOne = (req, res) => {
+exports.findOne = (req : any, res: any) => {
   const id = req.params.id;
   User.findByPk(id)
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err : any) => {
       res.status(500).send({
         message: "Error retrieving users with id=" + id
       });
@@ -184,7 +184,7 @@ exports.findOne = (req, res) => {
 };
 
 // Update a User by the id in the request
-exports.updateAccount = async (req, res) => {
+exports.updateAccount = async (req : any, res: any) => {
   const id = req.params.id;
   const user = req.body;
 
@@ -200,7 +200,7 @@ exports.updateAccount = async (req, res) => {
   User.update(user, {
     where: { id: id }
   })
-    .then(num => {
+    .then((num : any) => {
       if (num == 1) {
         res.send({
           message: "User was updated successfully."
@@ -211,7 +211,7 @@ exports.updateAccount = async (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch((err : any) => {
       res.status(500).send({
         message: "Error updating user with id=" + id
       });
@@ -219,13 +219,13 @@ exports.updateAccount = async (req, res) => {
 };
 
 // Delete a User with the specified id in the request
-exports.deleteAccount = (req, res) => {
+exports.deleteAccount = (req : any, res: any) => {
   const id = req.params.id;
 
   User.destroy({
     where : {id : id}
   })
-    .then(num => {
+    .then((num : any) => {
       if (num == 1) {
         res.send({
           message: "User was deleted successfully!"
@@ -236,7 +236,7 @@ exports.deleteAccount = (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch((err : any) => {
       res.status(500).send({
         message: "Could not delete User with id=" + id
       });

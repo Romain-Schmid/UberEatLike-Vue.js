@@ -4,7 +4,7 @@ const controllerSponsor = require('../controllers/controllerSponsor')
 var router = Router();
 
 
-router.get("/", (req, res) => {
+router.get("/", (req : any, res : any) => {
     res.send('Bienvenue sur Sponsorship')
 })
 

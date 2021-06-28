@@ -4,7 +4,7 @@ const db_sql = require("../models");
 const User = db_sql.model.User;
 const { createJWT, createRefreshJWT } = require('../modules/jwt');
 
-exports.loginAccount = async (req, res) => {
+exports.loginAccount = async (req : any, res : any) => {
   const {email, role, password} = req.body;
   const user = await User.findOne({ where : {email : email, role : role }})
   if(user == null){

@@ -45,7 +45,7 @@ mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, us
 // const db = require('./models');
 // db.sequelize.authenticate()
 //   .then(()=>console.log('MySQL connected...'))
-//   .catch(err => console.log('Error : ' + err))
+//   .catch((err: any) => console.log('Error : ' + err))
 // db.sequelize.sync().then(() => {
 //   console.log("Drop and re-sync db.");
 // });
@@ -62,12 +62,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors(corsOptions))
 app.disable('etag');
 
-app.get('/api/', (req, res) => res.send(`Opening service app port : ${appId}`))
+app.get('/api/', (req : any, res : any) => res.send(`Opening services app port : ${appId}`))
 
 app.post("/api/login/create",  controllerMySQL.createAccount)
 
 //Middleware
-var secure = async function (req,res,next) {
+var secure = async function (req : any, res : any, next : any) {
 
   //Get Token dans le header
   var tokenCookie = req.cookies.accessToken;

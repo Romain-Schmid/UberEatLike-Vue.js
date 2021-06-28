@@ -2,12 +2,12 @@ export {};
 const { Menu } = require('../models/modelMongo');
 
 
-exports.getAll = (req, res) => {
+exports.getAll = (req : any, res : any) => {
   Menu.find({ id_restaurant : req.params.id_rest }).populate('article')
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving Menu."
@@ -16,12 +16,12 @@ exports.getAll = (req, res) => {
 };
 
 
-exports.findOne = (req, res) => {
+exports.findOne = (req : any, res : any) => {
   Menu.findById(req.params.id_menu).populate('article')
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving Menu."
@@ -29,10 +29,10 @@ exports.findOne = (req, res) => {
     });
 };
 
-exports.update = async (req, res) => {
+exports.update = async (req : any, res : any) => {
   Menu.findOneAndUpdate({_id : req.params.id_menu, id_restaurant : req.params.id_rest},
      req.body)
-    .then(num => {
+    .then((num: any) => {
         if (num == null) {
           res.status(400).send({
             message: "Cannot update"
@@ -42,12 +42,12 @@ exports.update = async (req, res) => {
             message: `Success`
           });
         }})
-    .catch(error => res.status(400).json({ error }));
+    .catch((error : any) => res.status(400).json({ error }));
 };
 
-exports.delete = (req, res) => {
+exports.delete = (req : any, res : any) => {
 	Menu.deleteOne({_id : req.params.id_menu, id_restaurant : req.params.id_rest})
-  .then(response => {
+  .then((response: any) => {
     if (response.deletedCount == 1) {
       res.status(200).send({
         message: `Success`
@@ -57,6 +57,6 @@ exports.delete = (req, res) => {
         message: "Cannot delete"
       });
     }})
-.catch(error => res.status(400).json("Cannot delete"));
+.catch((error : any) => res.status(400).json("Cannot delete"));
 }
 

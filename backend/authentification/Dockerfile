@@ -1,13 +1,6 @@
-FROM node:14
-
-WORKDIR /nodejs/app
-
-RUN npm install  -g nodemon typescript  ts-node
-
-COPY *.json ./
-
+FROM node:14.16.0-alpine3.10
+WORKDIR /usr/app
+COPY package*.json ./
 RUN npm install
-
-COPY . .
-
-CMD [ "npm", "start" ]
+COPY . ./
+CMD ["npm", "run", "dev"]

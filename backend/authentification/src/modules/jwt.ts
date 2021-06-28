@@ -2,7 +2,7 @@ export {};
 
 var jwt = require('jsonwebtoken');
 
-const createJWT = (user) => {
+const createJWT = (user : any) => {
     var token = jwt.sign({
         user : user,
     }, process.env.ACCESS_TOKEN_SECRET, { expiresIn : '1h' });
@@ -10,7 +10,7 @@ const createJWT = (user) => {
     return token
 }
 
-const createRefreshJWT = (user) => {
+const createRefreshJWT = (user : any) => {
     var refreshToken = jwt.sign({
         user : user,
     }, process.env.REFRESH_TOKEN_SECRET, {expiresIn : '7d'});
@@ -18,7 +18,7 @@ const createRefreshJWT = (user) => {
 }
 
 
-const checkJWT = (token) => {
+const checkJWT = (token : string) => {
     let check = false;
     try {
         check = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
@@ -33,7 +33,7 @@ const checkJWT = (token) => {
 }
 
 
-const checkRefreshToken = (token) => {
+const checkRefreshToken = (token : string) => {
     let check = false;
     try {
         check = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);

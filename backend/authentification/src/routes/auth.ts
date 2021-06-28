@@ -5,7 +5,7 @@ const controllerMySQL = require('../controllers/controllerLoginAuth.ts')
 
 const appId = process.env.APPID;
 
-router.get('/', (req, res) => res.send(`Opening authen app port : ${appId}`));
+router.get('/', (req : any, res : any) => res.send(`Opening authentification app port : ${appId}`));
 
 //Se connecter
 router.post("/login", controllerMySQL.loginAccount)

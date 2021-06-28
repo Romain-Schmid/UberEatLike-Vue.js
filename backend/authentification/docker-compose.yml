@@ -7,12 +7,20 @@ services:
     ports:
       - '4010:80'
   auth1:
-    build: ./
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment: 
       - APPID=1111
+    volumes: 
+      - ./src:/usr/app/src
   auth2:
-    build: ./
+    build: 
+      context: .
+      dockerfile: Dockerfile
     environment: 
       - APPID=2222
+    volumes: 
+      - ./src:/usr/app/src
 
 

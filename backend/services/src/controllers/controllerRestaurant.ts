@@ -3,7 +3,7 @@ const controllerMenu = require("./controllerMenu");
 
 const { Restaurant, Menu, Article } = require('../models/modelMongo');
 
-const addArticleToMenu = function(ArticleId, MenuId) {
+const addArticleToMenu = function(ArticleId : string, MenuId : string) {
   return Menu.findOneAndUpdate({ _id : MenuId },
     { 
       $push : { 
@@ -13,7 +13,7 @@ const addArticleToMenu = function(ArticleId, MenuId) {
   ).populate('article');
 };
 
-const addArticleToRestaurant = function(ArticleId, RestaurantId, owner) {
+const addArticleToRestaurant = function(ArticleId : string, RestaurantId : string, owner : string) {
   return Restaurant.findOneAndUpdate({_id : RestaurantId, owner : owner},
     { 
       $push : { 
@@ -23,7 +23,7 @@ const addArticleToRestaurant = function(ArticleId, RestaurantId, owner) {
   ).populate('article');
 };
 
-const addMenuToRestaurant = function(MenuId, RestaurantId, owner) {
+const addMenuToRestaurant = function(MenuId : string, RestaurantId : string, owner : string) {
   return Restaurant.findOneAndUpdate({_id : RestaurantId, owner : owner},
     { 
       $push : { 
@@ -34,7 +34,7 @@ const addMenuToRestaurant = function(MenuId, RestaurantId, owner) {
 };
 
 // Create and Save a new Restaurant
-exports.create = (req, res) => {
+exports.create = (req : any, res : any) => {
   
   // Create a Restaurant
   const rest = new Restaurant ({
@@ -50,10 +50,10 @@ exports.create = (req, res) => {
   });
 
   rest.save()
-    .then(data => {
+    .then((data : any) => {
       res.status(200).send(data);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the restaurant."
@@ -64,7 +64,7 @@ exports.create = (req, res) => {
 
 
 // Create and Save a new menu on rest
-exports.createMenu = async (req, res) => {
+exports.createMenu = async (req : any, res : any) => {
   const owner = req.email;
   const id_rest = req.params.id_rest;  
   const article = req.body.article.split(',')
@@ -83,10 +83,10 @@ exports.createMenu = async (req, res) => {
   
   const menuUpdate = await Menu.findById(newMenu._id).populate('article')
   addMenuToRestaurant(menuUpdate._id, id_rest, owner)
-    .then(data => {
+    .then((data : any) => {
       res.send(menuUpdate);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the restaurant."
@@ -95,7 +95,7 @@ exports.createMenu = async (req, res) => {
 };
 
 // Create and Save a new article on rest
-exports.createArticle = async (req, res) => {
+exports.createArticle = async (req : any, res : any) => {
   const owner = req.email;
   const id_rest = req.params.id_rest;  
   const artc = new Article ({
@@ -109,10 +109,10 @@ exports.createArticle = async (req, res) => {
   const newArticle = await artc.save()
 
   addArticleToRestaurant(newArticle._id, id_rest, owner)
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the restaurant."
@@ -122,12 +122,12 @@ exports.createArticle = async (req, res) => {
 
 
 
-exports.getAll = (req, res) => {
+exports.getAll = (req : any, res : any) => {
   Restaurant.find({})
-    .then(data => {
+    .then((data : any) => {
       res.json(data);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving restaurant."
@@ -135,13 +135,13 @@ exports.getAll = (req, res) => {
     });
 };
 
-exports.getMine = (req, res) => {
+exports.getMine = (req : any, res : any) => {
   const owner = req.email;
   Restaurant.find({owner: owner})
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving restaurant."
@@ -149,13 +149,13 @@ exports.getMine = (req, res) => {
     });
 };
 
-exports.findOne = (req, res) => {
+exports.findOne = (req : any, res : any) => {
   const id_rest = req.params.id_rest;
   Restaurant.findById(id_rest).populate("menu", "-__v").populate("article", " -__v")
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving restaurant."
@@ -163,13 +163,13 @@ exports.findOne = (req, res) => {
     });
 };
 
-exports.findOneMenu = (req, res) => {
+exports.findOneMenu = (req : any, res : any) => {
   const id_menu = req.params.id_menu;
   Menu.findById(id_menu).populate('article')
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving restaurant."
@@ -177,13 +177,13 @@ exports.findOneMenu = (req, res) => {
     });
 };
 
-exports.update = (req, res) => {
+exports.update = (req : any, res : any) => {
   const owner = req.email;
   const filter = {_id : req.params.id_rest, owner : owner}
   const update = req.body;
 
   Restaurant.findOneAndUpdate(filter, update)
-    .then(num => {
+    .then((num: any) => {
         if (num == null) {
           res.status(400).send({
             message: "Cannot update"
@@ -193,12 +193,12 @@ exports.update = (req, res) => {
             message: `Success`
           });
         }})
-    .catch(error => res.status(400).json({ error }));
+    .catch((error : any) => res.status(400).json({ error }));
 };
 
-exports.delete = (req, res) => {
+exports.delete = (req : any, res : any) => {
 	Restaurant.deleteOne({ _id: req.params.id_rest, owner : req.email })
-  .then(response => {
+  .then((response: any) => {
     if (response.deletedCount == 1) {
       res.status(200).send({
         message: `Success`
@@ -208,6 +208,6 @@ exports.delete = (req, res) => {
         message: "Cannot delete"
       });
     }})
-.catch(error => res.status(400).json("Cannot delete"));
+.catch((error : any) => res.status(400).json("Cannot delete"));
 }
 

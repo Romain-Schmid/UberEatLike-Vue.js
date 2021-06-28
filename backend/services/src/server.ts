@@ -1,5 +1,5 @@
 //Create App with options
-import app from './src/app';
+import app from './app';
 require("dotenv").config();
 
 // const appId = 1111;

@@ -3,7 +3,7 @@ const { Sponsor } = require('../models/modelMongo');
 const db_sql = require("../models");
 const User = db_sql.model.User;
 
-exports.create = async (req, res) => {
+exports.create = async (req : any, res : any) => {
   const email_user = req.email
   const email_friend = req.body.email_friend
   const spons = new Sponsor({
@@ -25,10 +25,10 @@ exports.create = async (req, res) => {
   
 
   spons.save()
-  .then(data => {
+  .then((data : any) => {
     res.send(data);
   })
-  .catch(err => {
+  .catch((err: any) => {
     res.status(500).send({
       message:
         err.message || "Some error occurred while creating the Sponsor."
@@ -37,12 +37,12 @@ exports.create = async (req, res) => {
 };
 
 
-exports.getAll = (req, res) => {
+exports.getAll = (req : any, res : any) => {
   Sponsor.find({ email_user: req.email})
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving Sponsor."
@@ -50,12 +50,12 @@ exports.getAll = (req, res) => {
     });
 };
 
-exports.findOne = (req, res) => {
+exports.findOne = (req : any, res : any) => {
   Sponsor.findById(req.params.id_sponsor)
-    .then(data => {
+    .then((data : any) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err: any) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving Sponsor."
@@ -64,9 +64,9 @@ exports.findOne = (req, res) => {
 };
 
 
-exports.delete = async (req, res) => {
+exports.delete = async (req : any, res : any) => {
 	Sponsor.deleteOne({_id : req.params.id_sponsor})
-  .then(response => {
+  .then((response: any) => {
     console.log(response)
     if (response.deletedCount == 1) {
       res.status(200).send({
@@ -77,6 +77,6 @@ exports.delete = async (req, res) => {
         message: "Cannot delete"
       });
     }})
-.catch(error => res.status(400).json("Cannot delete"));
+.catch((error : any) => res.status(400).json("Cannot delete"));
 }
 

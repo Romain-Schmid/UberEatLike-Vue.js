@@ -3,13 +3,13 @@ import { Router } from 'express'
 const controllerMySQL = require('../controllers/controllerLoginAuth.ts')
 var router = Router();
 
-var secureCommercial= async function (req,res,next) {
+var secureCommercial= async function (req : any, res : any, next : any) {
     if(req.role != "Commercial"){
         return res.status(400).send("Action non authorisé avec votre rôle")
     }    
     next();
 }
-router.get("/", (req, res) => {
+router.get("/", (req : any, res : any) => {
     res.send('Bienvenue sur Account')
 })
 
