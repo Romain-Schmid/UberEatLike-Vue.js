@@ -1,9 +1,11 @@
 <template>
   <div class="home">    
 
+     <cart-modal v-bind:currentOrder="this.order"/>
+
     <div class="list">
       <b-card-group deck>
-        <div v-for="restaurant in listRestaurant" :key="restaurant.titre">
+        <div v-for="restaurant in listRestaurant" :key="restaurant._id">
           <b-card 
             v-bind:title=restaurant.titre
             img-src="https://picsum.photos/600/300/?image=25"
@@ -29,15 +31,19 @@
 <script>
 // @ is an alias to /src
 import User from '../models/user';
+import Order from '../models/order';
+import CartModal from '../components/CartModal.vue';
 import getRestaurant from '../services/restaurant.services.js';
 
 export default {
   name: "Home",
     components: {
+      CartModal,
   },
   data() {
     return {
       user: new User,
+      order: new Order,
       listRestaurant : [], 
     };
   },
@@ -55,6 +61,8 @@ export default {
       this.user = localStorage.getItem('user')
       this.user = this.user && JSON.parse(this.user)
       getRestaurant.getAllRestaurants().then( data => { this.listRestaurant = data})
+      
+      this.order = JSON.parse(localStorage.getItem('order'));
     }
   }
 };

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_LOG = ' https://cesi.elective.fradetaxel.fr/auth/auth/login';
+const API_LOG = ' https://cesi.elective.fradetaxel.fr/auth/login';
 const API_CREAT = ' https://cesi.elective.fradetaxel.fr/api/login/create';
 
 class AuthService {

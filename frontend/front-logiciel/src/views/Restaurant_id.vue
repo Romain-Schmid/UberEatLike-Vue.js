@@ -1,9 +1,13 @@
 <template>
   <div class="home">
+
+      <cart-modal v-bind:currentOrder="this.order"/>
+
+    <h1>{{currentRestaurant.titre}}</h1>
     <h1>Menus :</h1>     
     <div class="list">
       <b-card-group deck>
-        <div v-for="menu in listMenus" :key="menu.titre">
+        <div v-for="menu in listMenus" :key="menu._id">
           <b-card 
             v-bind:title=menu.titre
             img-src="https://picsum.photos/600/300/?image=25"
@@ -14,15 +18,15 @@
             class="mb-2"
           >
             <b-card-text>
-              <ul v-for="article in menu['article']" :key="article.titre">
+              <ul v-for="article in menu['article']" :key="article._id">
                 <li>
                   {{article.titre}}
                 </li>
               </ul>
             </b-card-text>
 
-            <b-button href="" variant="success"> Ajouter </b-button>
-            <b-form-spinbutton id="sb-inline"  min="0" max="10"  placeholder="0" inline></b-form-spinbutton>
+            <b-button v-on:click="AddOrder(menu)" variant="success"> Add </b-button>
+            <b-form-spinbutton  min="0" max="10"  placeholder="0" v-model="responses[menu._id]" inline></b-form-spinbutton>
           </b-card>
         </div>
       </b-card-group>
@@ -30,7 +34,7 @@
     <h1>Articles :</h1>
     <div class="list">
       <b-card-group deck>
-        <div v-for="article in listArticles" :key="article.titre">
+        <div v-for="article in listArticles" :key="article._id">
           <b-card 
             v-bind:title=article.titre
             img-src="https://picsum.photos/600/300/?image=25"
@@ -43,17 +47,12 @@
             <b-card-text>
               {{article.description}}  
             </b-card-text>
-              <b-button  v-on:click="AddOrder(article._id, article.titre, responses[article._id], article.prix)" variant="success"> Ajouter </b-button>
+              <b-button  v-on:click="AddOrder(article)" variant="success"> Add </b-button>
               <b-form-spinbutton  min="0" max="10" placeholder="0" v-model="responses[article._id]" inline></b-form-spinbutton>
           </b-card>
         </div>
       </b-card-group>
     </div>
-
-    <h1>Panier</h1>
-    <p v-for="article in listOrder" :key="article.titre">
-      Titre : {{article.titre}}, ID: {{article.id}}, Prix: {{article.price}}, Nombre : {{article.nb}}
-    </p>
 
   </div>
 
@@ -62,31 +61,32 @@
 <script>
 // @ is an alias to /src
 import User from '../models/user';
+import Order from '../models/order';
+import CartModal from '../components/CartModal.vue';
 import getRestaurant from '../services/restaurant.services.js';
 
 export default {
   name: "Home",
     components: {
+      CartModal,
   },
   data() {
     return {
       user: new User,
+      order: new Order(),
+      currentRestaurant : [],
       listMenus : [], 
       listArticles :[],
       responses: {},
-      listOrder : [],
     };
   },
   methods: {
-    AddOrder(id, titre, nb, price){
-      var article = this.listOrder.find(article => article.id === id)
-
-      if(article != null){
-        article.nb += nb;
-      }else{
-        var feed = {id: id, titre: titre, nb: nb, price: price}
-        this.listOrder.push(feed)
+    AddOrder(article){
+      if(localStorage.getItem('order').rest_id == null){
+        this.order.setOrder(this.currentRestaurant._id, this.currentRestaurant.titre)
       }
+      this.order.kevin(article._id, article.titre, this.responses[article._id], article.prix)
+      localStorage.setItem('order', JSON.stringify(this.order));
     }
   },
   computed: {
@@ -100,8 +100,17 @@ export default {
     }else{
       this.user = localStorage.getItem('user')
       this.user = this.user && JSON.parse(this.user)
+
+      //get Actual Restaurant, actual menues and articles
+      getRestaurant.getOneRestaurant(this.$route.params.id).then( data => { this.currentRestaurant = data})
       getRestaurant.getMenus(this.$route.params.id).then( data => { this.listMenus = data})
       getRestaurant.getArticles(this.$route.params.id).then( data => { this.listArticles = data})
+
+      if(localStorage.getItem('order').rest_id != null){
+        console.log("Get currentOrder");
+        this.order = JSON.parse(localStorage.getItem('order'));
+      }
+
     }
   }
 };
