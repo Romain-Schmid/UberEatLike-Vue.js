@@ -6,6 +6,7 @@ const express = require('express');
 const socketio = require('socket.io')
 const path = require('path');
 const cookieParser = require('cookie-parser')
+const request = require('request');
 
 const logger = require('morgan');
 const log = require('./modules/logger')
@@ -52,7 +53,7 @@ mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, us
 
 //Create App with options
 const app = express();
-
+const appId = process.env.APPID;
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -61,23 +62,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors(corsOptions))
 app.disable('etag');
 
-// app.use((req, res, next) => {
-//     // Website you wish to allow to connect
-//     res.setHeader('Access-Control-Allow-Origin', 'http://78.123.229.253:8083');
-//     // Request methods you wish to allow
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-//     // Request headers you wish to allow
-//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-//     // Set to true if you need the website to include cookies in the requests sent
-//     // to the API (e.g. in case you use sessions)
-//     res.setHeader('Access-Control-Allow-Credentials', true);
-//   next();
-// });
+app.get('/api/', (req, res) => res.send(`Opening service app port : ${appId}`))
 
 app.post("/api/login/create",  controllerMySQL.createAccount)
 
 //Middleware
 var secure = async function (req,res,next) {
+
   //Get Token dans le header
   var tokenCookie = req.cookies.accessToken;
   var refreshTokenCookie = req.cookies.refreshToken;
@@ -152,22 +143,11 @@ var secure = async function (req,res,next) {
 
 app.use(secure)
 
-app.use('/api/account' ,accountRouter);
-app.use('/api/order' ,orderRouter);
-app.use('/api/restaurant' ,restaurantRouter);
-app.use('/api/sponsor' ,sponsorRouter);
+app.use('/api/account', accountRouter);
+app.use('/api/order', orderRouter);
+app.use('/api/restaurant', restaurantRouter);
+app.use('/api/sponsor', sponsorRouter);
 
 
-const port = 3000;
 
-const server = app.listen(port, () => {
-  return console.log(`server is listening on ${port}`);
-});
-
-const io = socketio(server)
-
-io.on('connection', socket => {
-    console.log("New user connected")
-})
-
-module.exports = app;
+export default app;
