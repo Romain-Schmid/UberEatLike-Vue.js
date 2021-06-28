@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import getOrder from '../services/order.services.js';
+
 export default {
   name: "CartModal",
   props:['currentOrder'],
@@ -22,8 +24,16 @@ export default {
           this.$refs['cart'].show();
       },
       takeOrder(){
-        
-          this.$refs['cart'].hide();
+        var feed = "";
+        this.currentOrder.orderList.forEach(element => {
+          console.log("id : " + element.id + " nb : " + element.nb);
+          for(let i = 0; i < element.nb; i++){
+            feed.concat(element.id , ",");
+          }
+        });
+        console.log(feed, this.currentOrder.totalPrice, this.currentOrder.rest_id);
+        getOrder.createOrder(feed, this.currentOrder.totalPrice, this.currentOrder.rest_id);
+        this.$refs['cart'].hide();
       },
       deleteOrder(){
           this.currentOrder.eraseOrder();
