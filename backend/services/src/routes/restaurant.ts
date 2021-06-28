@@ -57,7 +57,6 @@ router.get("/:id_rest/article", controllerArticle.getAll)
 router.get("/:id_rest/article/:id_article", controllerArticle.findOne)
 
 
-router.use(secureRole)
 
 //Read and Get own restaurants
 router.post("/create", controllerRestaurant.create)

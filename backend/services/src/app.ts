@@ -10,11 +10,10 @@ const request = require('request');
 
 const logger = require('morgan');
 const log = require('./modules/logger')
-const { checkJWT,createJWT , checkRefreshToken } = require('./modules/jwt');
+const { createJWT , checkRefreshToken } = require('./modules/jwt');
 var jwt = require('jsonwebtoken');
 const db_sql = require("./models");
 const User = db_sql.model.User;
-const Restaurant = db_sql.model.Restaurant;
 var cors = require('cors')
 
 var corsOptions = {
