@@ -23,7 +23,7 @@ class RestorerService {
       });
   }
 
-  putUpdateRestorer(form,id) {
+  putUpdateRestorer(form, id) {
     return axios
       .put(
         API_URL + id,
@@ -67,6 +67,14 @@ class RestorerService {
       });
   }
 
+  getOneArticles(id, id2) {
+    return axios
+      .get(API_URL + id + "/article/" + id2, { withCredentials: true })
+      .then((res) => {
+        return res.data;
+      });
+  }
+
   getArticles(id) {
     return axios
       .get(API_URL + id + "/article", { withCredentials: true })
@@ -75,10 +83,28 @@ class RestorerService {
       });
   }
 
-  postArticle(form, id){
+  postArticle(form, id) {
     return axios
       .post(
-        API_URL + id +'/article',
+        API_URL + id + "/article",
+        {
+          titre: form.titre,
+          description: form.description,
+          type: form.type,
+          prix: form.prix,
+          picture: form.picture,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        return response.data;
+      });
+  }
+
+  putArticle(form, id, id2) {
+    return axios
+      .put(
+        API_URL + id + "/article/" + id2,
         {
           titre: form.titre,
           description: form.description,

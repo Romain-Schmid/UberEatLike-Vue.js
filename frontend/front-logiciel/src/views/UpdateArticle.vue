@@ -1,9 +1,9 @@
 <template>
   <div class="home">
-    <h1>Création d'un article</h1>
+    <h1>Modification d'un article</h1>
     <span class="center"
-      >Merci de remplire ce formulaire pour la création d'un article de votre
-      réstaurant
+      >Merci de remplire ce formulaire pour la modificatiob d'un article de
+      votre réstaurant
     </span>
     <span class="center"
       >Une image standars sera autaumatiquemment placé en fonction du type
@@ -147,6 +147,16 @@ export default {
     } else {
       this.user = localStorage.getItem("user");
       this.user = this.user && JSON.parse(this.user);
+      RestorerService.getOneArticles(
+        this.$route.params.id,
+        this.$route.params.id2
+      ).then((data) => {
+        this.form.titre = data.titre;
+        this.form.description = data.description;
+        this.form.type = data.type;
+        this.form.prix = data.prix;
+        this.form.picture = data.picture;
+      });
     }
   },
   methods: {
@@ -155,7 +165,11 @@ export default {
     },
     onSubmit(event) {
       event.preventDefault();
-      RestorerService.postArticle(this.form, this.$route.params.id).then(
+      RestorerService.putArticle(
+        this.form,
+        this.$route.params.id,
+        this.$route.params.id2
+      ).then(
         (data) => {
           this.message = data.message;
           this.successful = true;

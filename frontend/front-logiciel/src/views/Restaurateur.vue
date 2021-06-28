@@ -3,13 +3,13 @@
     <Sidebar />
     <h1>Choisissez votre restaurant</h1>
     <b-button
-              class="button"
-              id="Create"
-              v-bind:href="'/createRestorer'"
-              variant="success"
-            >
-              Créez un restaurant
-            </b-button>
+      class="button"
+      id="Create"
+      v-bind:href="'/createRestorer'"
+      variant="success"
+    >
+      Créez un restaurant
+    </b-button>
     <OwnRestaurant />
   </div>
 </template>

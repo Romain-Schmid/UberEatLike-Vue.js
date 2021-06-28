@@ -27,12 +27,12 @@
     </div>
     <h1>Articles :</h1>
     <b-button
-              class="button"
-              id="Create"
-              v-bind:href="'/restaurateur/'+this.$route.params.id+'/createArticle'"
-              variant="success"
-            >
-              Créez un artcile
+      class="button"
+      id="Create"
+      v-bind:href="'/restaurateur/' + this.$route.params.id + '/createArticle'"
+      variant="success"
+    >
+      Créez un artcile
     </b-button>
     <div class="list">
       <b-card-group deck>
@@ -49,7 +49,17 @@
             <b-card-text>
               {{ article.description }}
             </b-card-text>
-            <b-button href="" variant="success"> Modifier </b-button>
+            <b-button
+              v-bind:href="
+                '/restaurateur/' +
+                $route.params.id +
+                '/updateArticle/' +
+                article._id
+              "
+              variant="success"
+            >
+              Modifier
+            </b-button>
           </b-card>
         </div>
       </b-card-group>

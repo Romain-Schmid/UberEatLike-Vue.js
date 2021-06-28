@@ -2,8 +2,8 @@
   <div class="home">
     <h1>Mise à jours de votre restaurant</h1>
     <span class="center"
-      >Veuillez modifier les valeurs du formulaire pour mettre
-    a jours votre restaurant.
+      >Veuillez modifier les valeurs du formulaire pour mettre a jours votre
+      restaurant.
     </span>
     <b-form id="form" @submit="onSubmit" v-if="show">
       <b-form-group
@@ -164,13 +164,13 @@ export default {
       this.user = localStorage.getItem("user");
       this.user = this.user && JSON.parse(this.user);
       RestorerService.getRestaurant(this.$route.params.id).then((data) => {
-        this.form.titre = data.titre
-        this.form.description = data.description
-        this.form.type = data.type
-        this.form.rue = data.rue
-        this.form.ville = data.ville
-        this.form.pays = data.pays
-        this.form.note = data.note
+        this.form.titre = data.titre;
+        this.form.description = data.description;
+        this.form.type = data.type;
+        this.form.rue = data.rue;
+        this.form.ville = data.ville;
+        this.form.pays = data.pays;
+        this.form.note = data.note;
       });
     }
   },
@@ -180,7 +180,7 @@ export default {
     },
     onSubmit(event) {
       event.preventDefault();
-      RestorerService.putUpdateRestorer(this.form,this.$route.params.id).then(
+      RestorerService.putUpdateRestorer(this.form, this.$route.params.id).then(
         (data) => {
           this.message = data.message;
           this.successful = true;
