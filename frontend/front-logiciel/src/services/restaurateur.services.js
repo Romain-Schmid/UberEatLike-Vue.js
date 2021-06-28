@@ -23,6 +23,26 @@ class RestorerService {
       });
   }
 
+  putUpdateRestorer(form,id) {
+    return axios
+      .put(
+        API_URL + id,
+        {
+          titre: form.titre,
+          description: form.description,
+          type: form.type,
+          rue: form.rue,
+          ville: form.ville,
+          pays: form.pays,
+          note: form.note,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        return response.data;
+      });
+  }
+
   getMine() {
     return axios
       .get(API_URL + "getMine", { withCredentials: true })
@@ -34,6 +54,14 @@ class RestorerService {
   getMenus(id) {
     return axios
       .get(API_URL + id + "/menu", { withCredentials: true })
+      .then((res) => {
+        return res.data;
+      });
+  }
+
+  getRestaurant(id) {
+    return axios
+      .get(API_URL + "get/" + id, { withCredentials: true })
       .then((res) => {
         return res.data;
       });
