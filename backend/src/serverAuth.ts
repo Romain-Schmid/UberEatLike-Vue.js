@@ -3,9 +3,6 @@ require("dotenv").config();
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser')
-const logger = require('morgan');
-const log = require('./modules/logger')
-const { checkJWT } = require('./modules/jwt');
 var cors = require('cors')
 
 var corsOptions = {
@@ -23,7 +20,6 @@ var authRouter = require('./routes/auth')
 //Create App with options
 const app = express();
 
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

@@ -5,7 +5,8 @@ const logger = createLogger({
     exitOnError : false,
     format : format.json(),
     transport : [
-        new transports.File({ filename : './mylogfiles/bad-token.log'})
+        new transports.Console(),
+        new transports.File({ filename : './mylogfiles/connection.log'})
     ]
 });
 

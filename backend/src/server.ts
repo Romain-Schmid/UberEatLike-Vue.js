@@ -9,11 +9,10 @@ const cookieParser = require('cookie-parser')
 
 const logger = require('morgan');
 const log = require('./modules/logger')
-const { checkJWT,createJWT , checkRefreshToken } = require('./modules/jwt');
+const { createJWT , checkRefreshToken } = require('./modules/jwt');
 var jwt = require('jsonwebtoken');
 const db_sql = require("./models");
 const User = db_sql.model.User;
-const Restaurant = db_sql.model.Restaurant;
 var cors = require('cors')
 
 var corsOptions = {
@@ -61,6 +60,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors(corsOptions))
 app.disable('etag');
 
+app.get('/api', (req,res) => {
+  return res.send('Salut la compagnie')
+})
+
 // app.use((req, res, next) => {
 //     // Website you wish to allow to connect
 //     res.setHeader('Access-Control-Allow-Origin', 'http://78.123.229.253:8083');
@@ -78,6 +81,7 @@ app.post("/api/login/create",  controllerMySQL.createAccount)
 
 //Middleware
 var secure = async function (req,res,next) {
+
   //Get Token dans le header
   var tokenCookie = req.cookies.accessToken;
   var refreshTokenCookie = req.cookies.refreshToken;

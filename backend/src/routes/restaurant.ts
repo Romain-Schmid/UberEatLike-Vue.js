@@ -19,6 +19,7 @@ var secureRole = async function (req,res,next) {
 
 //Middleware
 var secureOwner = async function (req, res, next, id) {
+    console.log('secure OWner ??')
     const user = req.email;
     Restaurant.findById(id)
     .then(data => {
@@ -54,29 +55,28 @@ router.get("/:id_rest/article", controllerArticle.getAll)
 router.get("/:id_rest/article/:id_article", controllerArticle.findOne)
 
 
-router.use(secureRole)
 
 //Read and Get own restaurants
 router.post("/create", controllerRestaurant.create)
 router.get("/getMine", controllerRestaurant.getMine)
 
-router.param('id_rest', (req, res, next, id) => {
-    secureOwner(req, res, next, id);
-  })
+// router.param('id_rest', (req, res, next, id) => {
+//     secureOwner(req, res, next, id);
+//   })
 
 
 //Edit Restaurant
-router.put("/:id_rest", controllerRestaurant.update)
-router.delete("/:id_rest", controllerRestaurant.delete)
+router.put("/:id_rest", secureRole, controllerRestaurant.update)
+router.delete("/:id_rest", secureRole, controllerRestaurant.delete)
 
 //Edit Menu
-router.post("/:id_rest/menu", controllerRestaurant.createMenu)
-router.put("/:id_rest/menu/:id_menu", controllerMenu.update)
-router.delete("/:id_rest/menu/:id_menu", controllerMenu.delete)
+router.post("/:id_rest/menu",secureRole, controllerRestaurant.createMenu)
+router.put("/:id_rest/menu/:id_menu",secureRole, controllerMenu.update)
+router.delete("/:id_rest/menu/:id_menu",secureRole, controllerMenu.delete)
 
 //Edit Articles
-router.post("/:id_rest/article", controllerRestaurant.createArticle)
-router.put("/:id_rest/article/:id_article", controllerArticle.update)
-router.delete("/:id_rest/article/:id_article", controllerArticle.delete)
+router.post("/:id_rest/article",secureRole, controllerRestaurant.createArticle)
+router.put("/:id_rest/article/:id_article",secureRole, controllerArticle.update)
+router.delete("/:id_rest/article/:id_article",secureRole, controllerArticle.delete)
 
 module.exports = router;

@@ -139,7 +139,7 @@ exports.getMine = (req, res) => {
   const owner = req.email;
   Restaurant.find({owner: owner})
     .then(data => {
-      res.send(data);
+      res.json(data);
     })
     .catch(err => {
       res.status(500).send({
@@ -153,7 +153,8 @@ exports.findOne = (req, res) => {
   const id_rest = req.params.id_rest;
   Restaurant.findById(id_rest).populate("menu", "-__v").populate("article", " -__v")
     .then(data => {
-      res.send(data);
+      console.log(data)
+      res.json(data);
     })
     .catch(err => {
       res.status(500).send({
@@ -167,7 +168,7 @@ exports.findOneMenu = (req, res) => {
   const id_menu = req.params.id_menu;
   Menu.findById(id_menu).populate('article')
     .then(data => {
-      res.send(data);
+      res.json(data);
     })
     .catch(err => {
       res.status(500).send({
