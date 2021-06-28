@@ -4,8 +4,22 @@
     <cart-modal v-bind:currentOrder="this.order"/>
     
     <div v-if="listOrder.length != 0">
+      
+        <h1>En attente de Payement :</h1>
         <div v-for="o in listOrder" :key="o._id">
-            <p>{{o._id}}</p>
+          <div v-if='o.status == "unpaid"'>
+            <p>{{o._id}}  --- Prix : {{o.prix}} €
+              <b-button v-on:click="delOrder(o._id)" variant="danger"> Delete </b-button>
+              <b-button v-on:click="pay(o._id)" variant="success"> Pay </b-button>
+            </p>
+          </div>
+        </div>
+
+        <h1>En cours de livraison :</h1>
+        <div v-for="o in listOrder" :key="o._id">
+          <div v-if='o.status == "paid"'>
+            <p>{{o._id}}  --- Prix : {{o.prix}} € </p>
+          </div>
         </div>
     </div>
     <div v-else> Vous n'avez pas encore passez de commandes.</div>
@@ -34,6 +48,12 @@ export default {
     };
   },
   methods: {
+    delOrder(id){
+      getOrder.deleteOrder(id);
+    },
+    pay(id){
+      getOrder.payOrder(id);
+    }
   },
   computed: {
     currentUser() {

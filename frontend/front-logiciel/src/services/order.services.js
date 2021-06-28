@@ -22,6 +22,11 @@ class OrderService {
         .then(res => {return res.data});
     }
 
+    payOrder(id){
+      return axios.put(API_URL + '/paid/' + id ,{withCredentials: true})
+      .then(res => {return res.data});
+  }
+
 }
 
 export default new OrderService();
