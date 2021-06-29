@@ -8,6 +8,9 @@
     <span class="center"
       >Une image standars sera autaumatiquemment placé pour le menu
     </span>
+    <span class="center"
+      >Veuillez remplire le "panier" avec les articles de votre menu
+    </span>
     <b-form id="form" @submit="onSubmit" v-if="show">
       <b-form-group
         id="input-group-1"
@@ -55,7 +58,30 @@
         </b-input-group>
       </b-form-group>
 
-      <b-button type="submit" variant="success">Envoyer</b-button>
+      <cart-modal v-bind:currentOrder="this.order"/>
+
+    <div class="list">
+      <b-card-group deck>
+        <div v-for="article in listArticles" :key="article._id">
+          <b-card 
+            v-bind:title=article.titre
+            :img-src=article.picture
+            img-alt="Image"
+            img-top
+            tag="article"
+            style="max-width: 20rem;"
+            class="mb-2"
+          >
+            <b-card-text>
+              {{article.description}}  
+            </b-card-text>
+              <b-button  v-on:click="AddOrder(article)" variant="success"> Add </b-button>
+              <b-form-spinbutton  min="0" max="10" placeholder="0" v-model="responses[article._id]" inline></b-form-spinbutton>
+          </b-card>
+        </div>
+      </b-card-group>
+    </div>
+    <b-button type="submit" variant="success">Envoyer</b-button>
     </b-form>
   </div>
 </template>
@@ -64,9 +90,14 @@
 // @ is an alias to /src
 import User from "../models/user";
 import RestorerService from "../services/restaurateur.services";
+import Order from '../models/order';
+import CartModal from '../components/CartModalRestorer.vue';
 
 export default {
   name: "Home",
+  components: {
+      CartModal,
+  },
   data() {
     return {
       user: new User(),
@@ -76,6 +107,10 @@ export default {
         prix: "",
       },
       show: true,
+      order: new Order(),
+      listArticles :[],
+      currentRestaurant : [],
+      responses: {},
     };
   },
   computed: {
@@ -89,6 +124,15 @@ export default {
     } else {
       this.user = localStorage.getItem("user");
       this.user = this.user && JSON.parse(this.user);
+
+      //get Actual Restaurant, actual menues and articles
+      RestorerService.getRestaurant(this.$route.params.id).then( data => { this.currentRestaurant = data})
+      RestorerService.getArticles(this.$route.params.id).then( data => { this.listArticles = data})
+      if(localStorage.getItem('order') != null){
+        this.order.getLocalStorage(JSON.parse(localStorage.getItem('order')));
+      }else{
+        localStorage.setItem('order', JSON.stringify(this.order));
+      }
     }
   },
   methods: {
@@ -97,12 +141,20 @@ export default {
     },
     onSubmit(event) {
       event.preventDefault();
-      RestorerService.postArticle(this.form, this.$route.params.id).then(
+      console.log(this.order)
+      var feed ="";
+        this.order.orderList.forEach(element => {
+           for(var i =0; i < element.nb; i++){
+             feed += element.id + ","
+           }
+        })
+      feed = feed.slice(0,-1);
+      RestorerService.postMenu(this.form, feed, this.$route.params.id).then(
         (data) => {
           this.message = data.message;
           this.successful = true;
           alert("Successe");
-          this.$router.push("/restaurateur");
+          this.$router.push("/restaurateur/"+this.$route.params.id);
         },
         (error) => {
           this.loading = false;
@@ -113,6 +165,13 @@ export default {
         }
       );
     },
+    AddOrder(article){
+      if(localStorage.getItem('order').rest_id == null){
+        this.order.setOrder(this.currentRestaurant._id, this.currentRestaurant.titre)
+      }
+      this.order.kevin(article._id, article.titre, this.responses[article._id], article.prix)
+      localStorage.setItem('order', JSON.stringify(this.order));
+    }
   },
 };
 </script>
@@ -157,5 +216,15 @@ h1 {
   margin-bottom: 10px;
   border: 3px solid #42b983;
   padding: 1%;
+}
+
+.card-deck{
+  align-items: center;
+  justify-content: center;
+  column-gap : 2em;
+}
+.card{
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

@@ -142,6 +142,23 @@ class RestorerService {
         return response.data;
       });
   }
+
+  postMenu(form, feed, id) {
+    return axios
+      .post(
+        API_URL + id + "/menu",
+        {
+          titre: form.titre,
+          description: form.description,
+          prix: form.prix,
+          article: feed,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        return response.data;
+      });
+  }
 }
 
 export default new RestorerService();

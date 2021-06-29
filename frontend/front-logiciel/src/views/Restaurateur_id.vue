@@ -14,7 +14,7 @@
         <div v-for="menu in listMenus" :key="menu.titre">
           <b-card
             v-bind:title="menu.titre"
-            img-src="https://picsum.photos/600/300/?image=25"
+            :img-src = menu.picture
             img-alt="Image"
             img-top
             tag="article"
