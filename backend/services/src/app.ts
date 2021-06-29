@@ -3,7 +3,6 @@ import jwt_decode from "jwt-decode";
 
 require("dotenv").config();
 const express = require('express');
-const socketio = require('socket.io')
 const path = require('path');
 const cookieParser = require('cookie-parser')
 const request = require('request');
@@ -30,6 +29,7 @@ var accountRouter = require('./routes/account');
 var orderRouter = require('./routes/order');
 var restaurantRouter = require('./routes/restaurant');
 var sponsorRouter = require('./routes/sponsorship');
+var statsRouter = require('./routes/stats');
 
 // Connection MongoDB
 mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, useUnifiedTopology: true,  useCreateIndex: true, useFindAndModify: false
@@ -61,7 +61,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors(corsOptions))
 app.disable('etag');
 
+
 app.get('/api/', (req : any, res : any) => res.send(`Opening services app port : ${appId}`))
+
 
 app.post("/api/login/create",  controllerMySQL.createAccount)
 
@@ -72,8 +74,6 @@ var secure = async function (req : any, res : any, next : any) {
   var tokenCookie = req.cookies.accessToken;
   var refreshTokenCookie = req.cookies.refreshToken;
   console.log(req.cookies)
-  console.log(tokenCookie);
-  console.log(refreshTokenCookie);
 
   if(!refreshTokenCookie && !tokenCookie){
     console.log("incorrect")
@@ -140,13 +140,22 @@ var secure = async function (req : any, res : any, next : any) {
   }
 }
 
-app.use(secure)
 
-app.use('/api/account', accountRouter);
-app.use('/api/order', orderRouter);
-app.use('/api/restaurant', restaurantRouter);
-app.use('/api/sponsor', sponsorRouter);
+app.use('/api/account',secure, accountRouter);
+app.use('/api/order',secure, orderRouter);
+app.use('/api/restaurant',secure, restaurantRouter);
+app.use('/api/sponsor',secure, sponsorRouter);
+app.use('/api/stats',secure, statsRouter);
+
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
+
+io.on('connection', (socket : any) => {
+  socket.on('chat message', (msg : any) => {
+    io.emit('chat message', msg);
+  });
+});
 
 
 
-export default app;
+export default server;
