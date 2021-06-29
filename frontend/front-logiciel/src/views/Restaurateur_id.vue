@@ -14,7 +14,7 @@
         <div v-for="menu in listMenus" :key="menu.titre">
           <b-card
             v-bind:title="menu.titre"
-            :img-src = menu.picture
+            :img-src="menu.picture"
             img-alt="Image"
             img-top
             tag="article"
@@ -28,7 +28,14 @@
                 </li>
               </ul>
             </b-card-text>
-            <b-button href="" variant="success"> Modifier </b-button>
+            <b-button
+              v-bind:href="
+                '/restaurateur/' + $route.params.id + '/updateMenu/' + menu._id
+              "
+              variant="success"
+            >
+              Modifier
+            </b-button>
           </b-card>
         </div>
       </b-card-group>
@@ -47,7 +54,7 @@
         <div v-for="article in listArticles" :key="article.titre">
           <b-card
             v-bind:title="article.titre"
-            :img-src = article.picture
+            :img-src="article.picture"
             img-alt="Image"
             img-top
             tag="article"

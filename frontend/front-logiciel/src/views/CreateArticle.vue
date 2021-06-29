@@ -111,9 +111,7 @@ export default {
         { value: "dessert", text: "Dessert" },
         { value: "boisson", text: "Boisson" },
       ],
-      options2: [
-        { value: null, text: "Please select an option" },
-      ],
+      options2: [{ value: null, text: "Please select an option" }],
       show: true,
     };
   },
@@ -141,7 +139,7 @@ export default {
           this.message = data.message;
           this.successful = true;
           alert("Successe");
-          this.$router.push("/restaurateur/"+this.$route.params.id);
+          this.$router.push("/restaurateur/" + this.$route.params.id);
         },
         (error) => {
           this.loading = false;
@@ -153,43 +151,43 @@ export default {
       );
     },
     onChange(type) {
-      if (type == 'plat') {
+      if (type == "plat") {
         this.options2 = [
-        { value: null, text: "Please select an option" },
-        { value: "Burger", text: "Burger" },
-        { value: "Sushi", text: "Sushi" },
-        { value: "Viande", text: "Viande" },
-        { value: "Poisson", text: "Poisson" },
-      ]
-      }else if (type == 'boisson') {
+          { value: null, text: "Please select an option" },
+          { value: "Burger", text: "Burger" },
+          { value: "Sushi", text: "Sushi" },
+          { value: "Viande", text: "Viande" },
+          { value: "Poisson", text: "Poisson" },
+        ];
+      } else if (type == "boisson") {
         this.options2 = [
-        { value: null, text: "Please select an option" },
-        { value: "Soda", text: "Soda" },
-        { value: "Vin", text: "Vin" },
-        { value: "Eau", text: "Eau" },
-      ]
-      }else if (type == 'entré') {
+          { value: null, text: "Please select an option" },
+          { value: "Soda", text: "Soda" },
+          { value: "Vin", text: "Vin" },
+          { value: "Eau", text: "Eau" },
+        ];
+      } else if (type == "entré") {
         this.options2 = [
-        { value: null, text: "Please select an option" },
-        { value: "Salade", text: "Salade" },
-        { value: "Fdm", text: "Fruits de mer" },
-      ]
-      }else if (type == 'accompagnement') {
+          { value: null, text: "Please select an option" },
+          { value: "Salade", text: "Salade" },
+          { value: "Fdm", text: "Fruits de mer" },
+        ];
+      } else if (type == "accompagnement") {
         this.options2 = [
-        { value: null, text: "Please select an option" },
-        { value: "Frite", text: "Frite" },
-        { value: "Salade", text: "Salade" },
-        { value: "Pates", text: "Pâtes" },
-        { value: "Legumes", text: "Légumees" },
-      ]
-      }else if (type == 'dessert') {
+          { value: null, text: "Please select an option" },
+          { value: "Frite", text: "Frite" },
+          { value: "Salade", text: "Salade" },
+          { value: "Pates", text: "Pâtes" },
+          { value: "Legumes", text: "Légumees" },
+        ];
+      } else if (type == "dessert") {
         this.options2 = [
-        { value: null, text: "Please select an option" },
-        { value: "Gateaux", text: "Gateaux" },
-        { value: "Glaces", text: "Glaces" },
-      ]
+          { value: null, text: "Please select an option" },
+          { value: "Gateaux", text: "Gateaux" },
+          { value: "Glaces", text: "Glaces" },
+        ];
       }
-    }
+    },
   },
 };
 </script>

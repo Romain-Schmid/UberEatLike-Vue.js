@@ -214,9 +214,7 @@ export default {
       );
     },
     erase() {
-      RestorerService.delRestorer(
-        this.$route.params.id,
-      ).then(
+      RestorerService.delRestorer(this.$route.params.id).then(
         (data) => {
           this.message = data.message;
           this.successful = true;

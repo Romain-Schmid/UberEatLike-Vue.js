@@ -1,8 +1,8 @@
 <template>
   <div class="home">
-    <h1>Création d'un Menu</h1>
+    <h1>Modification d'un Menu</h1>
     <span class="center"
-      >Merci de remplire ce formulaire pour la création d'un menu de votre
+      >Merci de remplire ce formulaire pour la modification d'un menu de votre
       réstaurant
     </span>
     <span class="center"
@@ -91,6 +91,7 @@
       </div>
       <b-button type="submit" variant="success">Envoyer</b-button>
     </b-form>
+    <b-button variant="danger" v-on:click="erase()">Supprimer</b-button>
   </div>
 </template>
 
@@ -134,6 +135,19 @@ export default {
       this.user = localStorage.getItem("user");
       this.user = this.user && JSON.parse(this.user);
 
+      RestorerService.getOneMenu(
+        this.$route.params.id,
+        this.$route.params.id2
+      ).then((data) => {
+        data.article.forEach((article) => {
+          console.log(article);
+          this.AddOrder2(article);
+        });
+        this.form.titre = data.titre;
+        this.form.description = data.description;
+        this.form.prix = data.prix;
+      });
+
       //get Actual Restaurant, actual menues and articles
       RestorerService.getRestaurant(this.$route.params.id).then((data) => {
         this.currentRestaurant = data;
@@ -162,7 +176,12 @@ export default {
         }
       });
       feed = feed.slice(0, -1);
-      RestorerService.postMenu(this.form, feed, this.$route.params.id).then(
+      RestorerService.putMenu(
+        this.form,
+        feed,
+        this.$route.params.id,
+        this.$route.params.id2
+      ).then(
         (data) => {
           this.message = data.message;
           this.successful = true;
@@ -193,6 +212,36 @@ export default {
         article.prix
       );
       localStorage.setItem("order", JSON.stringify(this.order));
+    },
+    AddOrder2(article) {
+      if (localStorage.getItem("order").rest_id == null) {
+        this.order.setOrder(
+          this.currentRestaurant._id,
+          this.currentRestaurant.titre
+        );
+      }
+      this.order.kevin(article._id, article.titre, 1, article.prix);
+      localStorage.setItem("order", JSON.stringify(this.order));
+    },
+    erase() {
+      RestorerService.delMenu(
+        this.$route.params.id,
+        this.$route.params.id2
+      ).then(
+        (data) => {
+          this.message = data.message;
+          this.successful = true;
+          alert("Successe");
+          this.$router.push("/restaurateur/" + this.$route.params.id);
+        },
+        (error) => {
+          this.loading = false;
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
     },
   },
 };

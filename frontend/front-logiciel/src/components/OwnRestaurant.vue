@@ -5,7 +5,7 @@
         <div v-for="restaurant in listRestaurant" :key="restaurant.titre">
           <b-card
             v-bind:title="restaurant.titre"
-            :img-src = restaurant.picture
+            :img-src="restaurant.picture"
             img-alt="Image"
             img-top
             tag="article"

@@ -123,10 +123,7 @@ class RestorerService {
 
   delArticle(id, id2) {
     return axios
-      .delete(
-        API_URL + id + "/article/" + id2,
-        { withCredentials: true }
-      )
+      .delete(API_URL + id + "/article/" + id2, { withCredentials: true })
       .then((response) => {
         return response.data;
       });
@@ -134,10 +131,7 @@ class RestorerService {
 
   delRestorer(id) {
     return axios
-      .delete(
-        API_URL + id,
-        { withCredentials: true }
-      )
+      .delete(API_URL + id, { withCredentials: true })
       .then((response) => {
         return response.data;
       });
@@ -155,6 +149,39 @@ class RestorerService {
         },
         { withCredentials: true }
       )
+      .then((response) => {
+        return response.data;
+      });
+  }
+
+  putMenu(form, feed, id, id2) {
+    return axios
+      .put(
+        API_URL + id + "/menu/" + id2,
+        {
+          titre: form.titre,
+          description: form.description,
+          prix: form.prix,
+          article: feed,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        return response.data;
+      });
+  }
+
+  getOneMenu(id, id2) {
+    return axios
+      .get(API_URL + id + "/menu/" + id2, { withCredentials: true })
+      .then((res) => {
+        return res.data;
+      });
+  }
+
+  delMenu(id, id2) {
+    return axios
+      .delete(API_URL + id + "/menu/" + id2, { withCredentials: true })
       .then((response) => {
         return response.data;
       });
