@@ -7,6 +7,6 @@ export type user = {
 
 export type findOrder = {
     email_customer? : string,
-    id_restaurant? : string
+    id_restaurant? : any
     status? : string,
 };

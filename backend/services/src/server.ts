@@ -1,11 +1,12 @@
 //Create App with options
-import app from './app';
+import server from './app';
 require("dotenv").config();
+// ajout de socket.io
 
 // const appId = 1111;
 const appId = process.env.APPID;
 
-app.listen(appId, () => {
+server.listen(appId, () => {
   return console.log(`server is listening on ${appId}`);
 });
 

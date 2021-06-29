@@ -4,8 +4,10 @@ const { Article, Menu } = require('../models/modelMongo');
 
 
 exports.getAll = (req : any, res : any) => {
+  console.log( req.params.id_rest )
   Article.find({ id_restaurant : req.params.id_rest })
     .then((data : any) => {
+      console.log( data )
       res.send(data);
     })
     .catch((err: any) => {
@@ -31,8 +33,10 @@ exports.findOne = (req : any, res : any) => {
 };
 
 exports.update = async (req : any, res : any) => {
+  const update = req.body;
+  update.picture = "https://images.fradetaxel.fr/article/" + req.body.specific + ".png";
   Article.findOneAndUpdate({_id : req.params.id_article, id_restaurant : req.params.id_rest},
-     req.body)
+    update)
     .then((num: any) => {
         if (num == null) {
           res.status(400).send({

@@ -9,11 +9,12 @@ const restaurantSchema : Schema = new Schema({
     rue : {type : String, required : true},
     ville : {type : String, required : true},
     pays : {type : String, required : true},
+    code_postale : {type : Number, required : true},
     note : {type : Number, required : true},
     description : {type : String, required : true},
     picture : {type : String, required : false},
     menu: [{ type: Schema.Types.ObjectId, ref: 'Menu' }],
-    article: [{ type: Schema.Types.ObjectId, ref: 'Article' }]
+    article: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
 
   });
 restaurantSchema.plugin(AutoIncrement, {id : 'restaurant_id', inc_field: 'id'});
@@ -24,6 +25,7 @@ export interface IRestaurant extends Document {
   rue : string,
   ville : string,
   pays : string,
+  code_postale : number,
   note : number,
   description : string,
   picture : string,
@@ -65,6 +67,7 @@ const articleSchema : Schema = new Schema({
     titre : {type : String, required : true},
     id_restaurant : {type : String, required : true},
     type : {type : String, required : true},
+    specific : {type : String, required : true},
     description : {type : String, required : true},
     picture : {type : String, required : true},
     prix : {type : Number, required : true},
@@ -74,6 +77,7 @@ export interface IArticle extends Document {
   titre : string,
   id_restaurant : String,
   type : string,
+  specific : string,
   description : string,
   picture : string,
   prix : number,
@@ -88,6 +92,9 @@ const orderSchema : Schema = new Schema({
   email_delivery : {type : String, required : false, default : null},
   prix : {type : Number, required : true},
   status : {type : String, required : true, default : "unpaid"},
+  rue : {type : String, required : true},
+  ville : {type : String, required : true},
+  code_postale : {type : Number, required : true},
 });
 export interface IOrder extends Document {
 content : [string],
@@ -99,6 +106,9 @@ email_customer : string,
 email_delivery : string,
 prix : number,
 status : string,
+rue : string,
+ville : string,
+code_postale : number,
 }
 var MOrder = mongoose.model<IOrder>('Order', orderSchema);
 

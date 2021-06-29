@@ -35,7 +35,8 @@ const addMenuToRestaurant = function(MenuId : string, RestaurantId : string, own
 
 // Create and Save a new Restaurant
 exports.create = (req : any, res : any) => {
-  
+  const URL = "https://images.fradetaxel.fr/restaurant/" + req.body.type + ".png";
+
   // Create a Restaurant
   const rest = new Restaurant ({
     titre : req.body.titre,
@@ -43,10 +44,11 @@ exports.create = (req : any, res : any) => {
     note: req.body.note,
     description: req.body.description,
     owner : req.email,
-    picture : req.body.picture,
+    picture : URL,
     pays : req.body.pays,
     ville : req.body.ville,
-    rue : req.body.rue
+    rue : req.body.rue,
+    code_postale : req.body.code_postale
   });
 
   rest.save()
@@ -65,6 +67,8 @@ exports.create = (req : any, res : any) => {
 
 // Create and Save a new menu on rest
 exports.createMenu = async (req : any, res : any) => {
+  const URL = "https://images.fradetaxel.fr/menu.png";
+
   const owner = req.email;
   const id_rest = req.params.id_rest;  
   const article = req.body.article.split(',')
@@ -72,7 +76,7 @@ exports.createMenu = async (req : any, res : any) => {
     titre : req.body.titre,
     id_restaurant : id_rest,
     description: req.body.description,
-    picture : req.body.picture,
+    picture : URL,
     prix : req.body.prix,
   });
   const newMenu = await men.save()
@@ -98,12 +102,14 @@ exports.createMenu = async (req : any, res : any) => {
 exports.createArticle = async (req : any, res : any) => {
   const owner = req.email;
   const id_rest = req.params.id_rest;  
+  const URL = "https://images.fradetaxel.fr/article/" + req.body.specific + ".png";
   const artc = new Article ({
     titre : req.body.titre,
     id_restaurant : id_rest,
     type : req.body.type,
+    specific : req.body.specific,
     description: req.body.description,
-    picture : req.body.picture,
+    picture : URL,
     prix : req.body.prix,
   });
   const newArticle = await artc.save()
@@ -181,6 +187,7 @@ exports.update = (req : any, res : any) => {
   const owner = req.email;
   const filter = {_id : req.params.id_rest, owner : owner}
   const update = req.body;
+  update.picture = "https://images.fradetaxel.fr/restaurant/" + req.body.type + ".png";
 
   Restaurant.findOneAndUpdate(filter, update)
     .then((num: any) => {

@@ -6,13 +6,22 @@ const { Order, Menu, Article, Restaurant } = require('../models/modelMongo');
 
 exports.create = (req : any, res : any) => {
   const email_customer = req.email
-  const content = req.body.content.split(',')
-  const {id_restaurant, prix} = req.body;
+  var content : string
+  try  {
+     content = req.body.content.split(',')
+  }
+  catch{
+    return res.status(400).send('Panier vide')
+  }
+  const {id_restaurant, prix, code_postale, ville, rue} = req.body;
   const ord = new Order({
     content : content,
     id_restaurant : id_restaurant,
     email_customer : email_customer,
     prix : prix,
+    code_postale : code_postale,
+    rue : rue,
+    ville : ville
   })
 
   ord.save()
