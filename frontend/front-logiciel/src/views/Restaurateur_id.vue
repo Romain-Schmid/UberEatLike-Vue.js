@@ -1,6 +1,14 @@
 <template>
   <div class="home">
     <h1>Menus :</h1>
+    <b-button
+      class="button"
+      id="Create"
+      v-bind:href="'/restaurateur/' + this.$route.params.id + '/createMenu'"
+      variant="success"
+    >
+      Créez un Menu
+    </b-button>
     <div class="list">
       <b-card-group deck>
         <div v-for="menu in listMenus" :key="menu.titre">
@@ -111,5 +119,9 @@ export default {
 .card {
   margin-left: auto;
   margin-right: auto;
+}
+
+#Create {
+  margin-bottom: 10px;
 }
 </style>

@@ -83,6 +83,7 @@
 
       <b-button type="submit" variant="success">Envoyer</b-button>
     </b-form>
+    <b-button variant="danger" v-on:click="erase()">Supprimer</b-button>
   </div>
 </template>
 
@@ -155,7 +156,7 @@ export default {
           this.message = data.message;
           this.successful = true;
           alert("Successe");
-          this.$router.push("/restaurateur");
+          this.$router.push("/restaurateur/"+this.$route.params.id);
         },
         (error) => {
           this.loading = false;
@@ -203,7 +204,27 @@ export default {
         { value: "Glaces", text: "Glaces" },
       ]
       }
-    }
+    },
+    erase() {
+      RestorerService.delArticle(
+        this.$route.params.id,
+        this.$route.params.id2
+      ).then(
+        (data) => {
+          this.message = data.message;
+          this.successful = true;
+          alert("Successe");
+          this.$router.push("/restaurateur/"+this.$route.params.id);
+        },
+        (error) => {
+          this.loading = false;
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
   },
 };
 </script>

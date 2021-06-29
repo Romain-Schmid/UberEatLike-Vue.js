@@ -120,6 +120,28 @@ class RestorerService {
         return response.data;
       });
   }
+
+  delArticle(id, id2) {
+    return axios
+      .delete(
+        API_URL + id + "/article/" + id2,
+        { withCredentials: true }
+      )
+      .then((response) => {
+        return response.data;
+      });
+  }
+
+  delRestorer(id) {
+    return axios
+      .delete(
+        API_URL + id,
+        { withCredentials: true }
+      )
+      .then((response) => {
+        return response.data;
+      });
+  }
 }
 
 export default new RestorerService();

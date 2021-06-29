@@ -128,6 +128,7 @@
 
       <b-button type="submit" variant="success">Envoyer</b-button>
     </b-form>
+    <b-button variant="danger" v-on:click="erase()">Supprimer</b-button>
   </div>
 </template>
 
@@ -197,6 +198,25 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       RestorerService.putUpdateRestorer(this.form, this.$route.params.id).then(
+        (data) => {
+          this.message = data.message;
+          this.successful = true;
+          alert("Successe");
+          this.$router.push("/restaurateur");
+        },
+        (error) => {
+          this.loading = false;
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+    erase() {
+      RestorerService.delRestorer(
+        this.$route.params.id,
+      ).then(
         (data) => {
           this.message = data.message;
           this.successful = true;

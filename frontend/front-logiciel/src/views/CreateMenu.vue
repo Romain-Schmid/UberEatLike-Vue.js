@@ -1,38 +1,37 @@
 <template>
   <div class="home">
-    <h1>Création d'un article</h1>
+    <h1>Création d'un Menu</h1>
     <span class="center"
-      >Merci de remplire ce formulaire pour la création d'un article de votre
+      >Merci de remplire ce formulaire pour la création d'un menu de votre
       réstaurant
     </span>
     <span class="center"
-      >Une image standars sera autaumatiquemment placé en fonction du type
-      d'image selectionner
+      >Une image standars sera autaumatiquemment placé pour le menu
     </span>
     <b-form id="form" @submit="onSubmit" v-if="show">
       <b-form-group
         id="input-group-1"
-        label="Titre de l'article :"
+        label="Titre du menu :"
         label-for="input-1"
       >
         <b-form-input
           id="input-1"
           v-model="form.titre"
           type="text"
-          placeholder="Entrer le titre de votre article"
+          placeholder="Entrer le titre de votre menu"
           required
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
         id="input-group-2"
-        label="Description de l'article :"
+        label="Description du menu :"
         label-for="input-2"
       >
         <b-form-textarea
           id="input-2"
           v-model="form.description"
-          placeholder="Description de votre article ..."
+          placeholder="Description de votre menu ..."
           rows="3"
           max-rows="6"
           required
@@ -41,44 +40,19 @@
 
       <b-form-group
         id="input-group-3"
-        label="Type de l'article :"
+        label="Prix du menu en euros :"
         label-for="input-3"
-      >
-        <b-form-select
-          v-model="form.type"
-          required
-          :options="options"
-          v-on:change="onChange(form.type)"
-        ></b-form-select>
-      </b-form-group>
-
-      <b-form-group
-        id="input-group-4"
-        label="Prix de l'article en euros :"
-        label-for="input-4"
         prepend="$"
       >
         <b-input-group prepend="€">
           <b-form-input
-            id="input-4"
+            id="input-3"
             v-model="form.prix"
             type="number"
             placeholder="Entrer le prix de votre article"
             required
           ></b-form-input>
         </b-input-group>
-      </b-form-group>
-
-      <b-form-group
-        id="input-group-5"
-        label="Image de l'article :"
-        label-for="input-5"
-      >
-        <b-form-select
-          v-model="form.specific"
-          required
-          :options="options2"
-        ></b-form-select>
       </b-form-group>
 
       <b-button type="submit" variant="success">Envoyer</b-button>
@@ -99,21 +73,8 @@ export default {
       form: {
         titre: "",
         description: "",
-        type: null,
         prix: "",
-        specific: "",
       },
-      options: [
-        { value: null, text: "Please select an option" },
-        { value: "plat", text: "Plat" },
-        { value: "entré", text: "Entrée" },
-        { value: "accompagnement", text: "Accompagnemment" },
-        { value: "dessert", text: "Dessert" },
-        { value: "boisson", text: "Boisson" },
-      ],
-      options2: [
-        { value: null, text: "Please select an option" },
-      ],
       show: true,
     };
   },
@@ -141,7 +102,7 @@ export default {
           this.message = data.message;
           this.successful = true;
           alert("Successe");
-          this.$router.push("/restaurateur/"+this.$route.params.id);
+          this.$router.push("/restaurateur");
         },
         (error) => {
           this.loading = false;
@@ -152,44 +113,6 @@ export default {
         }
       );
     },
-    onChange(type) {
-      if (type == 'plat') {
-        this.options2 = [
-        { value: null, text: "Please select an option" },
-        { value: "Burger", text: "Burger" },
-        { value: "Sushi", text: "Sushi" },
-        { value: "Viande", text: "Viande" },
-        { value: "Poisson", text: "Poisson" },
-      ]
-      }else if (type == 'boisson') {
-        this.options2 = [
-        { value: null, text: "Please select an option" },
-        { value: "Soda", text: "Soda" },
-        { value: "Vin", text: "Vin" },
-        { value: "Eau", text: "Eau" },
-      ]
-      }else if (type == 'entré') {
-        this.options2 = [
-        { value: null, text: "Please select an option" },
-        { value: "Salade", text: "Salade" },
-        { value: "Fdm", text: "Fruits de mer" },
-      ]
-      }else if (type == 'accompagnement') {
-        this.options2 = [
-        { value: null, text: "Please select an option" },
-        { value: "Frite", text: "Frite" },
-        { value: "Salade", text: "Salade" },
-        { value: "Pates", text: "Pâtes" },
-        { value: "Legumes", text: "Légumees" },
-      ]
-      }else if (type == 'dessert') {
-        this.options2 = [
-        { value: null, text: "Please select an option" },
-        { value: "Gateaux", text: "Gateaux" },
-        { value: "Glaces", text: "Glaces" },
-      ]
-      }
-    }
   },
 };
 </script>
