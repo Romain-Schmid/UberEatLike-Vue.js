@@ -39,7 +39,7 @@
         <div v-for="article in listArticles" :key="article.titre">
           <b-card
             v-bind:title="article.titre"
-            img-src="https://picsum.photos/600/300/?image=25"
+            :img-src = article.picture
             img-alt="Image"
             img-top
             tag="article"

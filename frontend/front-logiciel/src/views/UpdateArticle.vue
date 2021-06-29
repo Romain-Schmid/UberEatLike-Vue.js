@@ -48,6 +48,7 @@
           v-model="form.type"
           required
           :options="options"
+          v-on:change="onChange(form.type)"
         ></b-form-select>
       </b-form-group>
 
@@ -74,7 +75,7 @@
         label-for="input-5"
       >
         <b-form-select
-          v-model="form.picture"
+          v-model="form.specific"
           required
           :options="options2"
         ></b-form-select>
@@ -100,7 +101,7 @@ export default {
         description: "",
         type: null,
         prix: "",
-        picture: "",
+        specific: "",
       },
       options: [
         { value: null, text: "Please select an option" },
@@ -112,26 +113,6 @@ export default {
       ],
       options2: [
         { value: null, text: "Please select an option" },
-        {
-          value: "https://images.fradetaxel.fr/plat.png",
-          text: "Image d'un plat",
-        },
-        {
-          value: "https://images.fradetaxel.fr/entré.png",
-          text: "Image d'une entrée",
-        },
-        {
-          value: "https://images.fradetaxel.fr/accompagnement.png",
-          text: "Image d'un accompagnemment",
-        },
-        {
-          value: "https://images.fradetaxel.fr/dessert.png",
-          text: "Image d'un dessert",
-        },
-        {
-          value: "https://images.fradetaxel.fr/boisson.png",
-          text: "Image d'une boisson",
-        },
       ],
       show: true,
     };
@@ -155,7 +136,7 @@ export default {
         this.form.description = data.description;
         this.form.type = data.type;
         this.form.prix = data.prix;
-        this.form.picture = data.picture;
+        this.form.specific = data.specific;
       });
     }
   },
@@ -185,6 +166,44 @@ export default {
         }
       );
     },
+    onChange(type) {
+      if (type == 'plat') {
+        this.options2 = [
+        { value: null, text: "Please select an option" },
+        { value: "Burger", text: "Burger" },
+        { value: "Sushi", text: "Sushi" },
+        { value: "Viande", text: "Viande" },
+        { value: "Poisson", text: "Poisson" },
+      ]
+      }else if (type == 'boisson') {
+        this.options2 = [
+        { value: null, text: "Please select an option" },
+        { value: "Soda", text: "Soda" },
+        { value: "Vin", text: "Vin" },
+        { value: "Eau", text: "Eau" },
+      ]
+      }else if (type == 'entré') {
+        this.options2 = [
+        { value: null, text: "Please select an option" },
+        { value: "Salade", text: "Salade" },
+        { value: "Fdm", text: "Fruits de mer" },
+      ]
+      }else if (type == 'accompagnement') {
+        this.options2 = [
+        { value: null, text: "Please select an option" },
+        { value: "Frite", text: "Frite" },
+        { value: "Salade", text: "Salade" },
+        { value: "Pates", text: "Pâtes" },
+        { value: "Legumes", text: "Légumees" },
+      ]
+      }else if (type == 'dessert') {
+        this.options2 = [
+        { value: null, text: "Please select an option" },
+        { value: "Gateaux", text: "Gateaux" },
+        { value: "Glaces", text: "Glaces" },
+      ]
+      }
+    }
   },
 };
 </script>

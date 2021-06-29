@@ -92,7 +92,7 @@ class RestorerService {
           description: form.description,
           type: form.type,
           prix: form.prix,
-          picture: form.picture,
+          specific: form.specific,
         },
         { withCredentials: true }
       )
@@ -110,7 +110,7 @@ class RestorerService {
           description: form.description,
           type: form.type,
           prix: form.prix,
-          picture: form.picture,
+          specific: form.specific,
         },
         { withCredentials: true }
       )
