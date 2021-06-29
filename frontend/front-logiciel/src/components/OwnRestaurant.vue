@@ -5,7 +5,7 @@
         <div v-for="restaurant in listRestaurant" :key="restaurant.titre">
           <b-card
             v-bind:title="restaurant.titre"
-            img-src="https://picsum.photos/600/300/?image=25"
+            :img-src = restaurant.picture
             img-alt="Image"
             img-top
             tag="article"

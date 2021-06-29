@@ -88,6 +88,20 @@
           </b-form-group>
 
           <b-form-group
+            label="Code Postale :"
+            label-for="nested-code_postale"
+            label-cols-sm="3"
+            label-align-sm="right"
+          >
+            <b-form-input
+              id="nested-code_postale"
+              v-model="form.code_postale"
+              type="number"
+              required
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group
             label="Pays:"
             label-for="nested-pays"
             label-cols-sm="3"
@@ -133,17 +147,18 @@ export default {
         type: null,
         rue: "",
         ville: "",
+        code_postale: "",
         pays: "",
         note: "",
       },
       options: [
         { value: null, text: "Please select an option" },
         { value: "Fast-food", text: "Fast-food" },
-        { value: "Thaĩ", text: "Thaĩ" },
+        { value: "Thai", text: "Thaĩ" },
         { value: "Italien", text: "Italien" },
         { value: "Sushi", text: "Sushi" },
         { value: "Asiatique", text: "Asiatique" },
-        { value: "Américain", text: "Américain" },
+        { value: "Americain", text: "Américain" },
         { value: "Indien", text: "Indien" },
         { value: "Street-food", text: "Street-food" },
         { value: "Mexicain", text: "Mexicain" },
@@ -169,6 +184,7 @@ export default {
         this.form.type = data.type;
         this.form.rue = data.rue;
         this.form.ville = data.ville;
+        this.form.code_postale = data.code_postale;
         this.form.pays = data.pays;
         this.form.note = data.note;
       });
