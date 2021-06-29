@@ -20,24 +20,24 @@ export default class Order {
     }
 
     kevin(id, titre, nb, price){
-        var article = this.orderList.find(article => article.id === id)
-
-        if(article != null){
-            article.nb += nb;
-        }else{
-            var feed = {id: id, titre: titre, nb: nb, price: price}
-            this.orderList.push(feed)
+        if(nb > 0){
+            var article = this.orderList.find(article => article.id === id)
+    
+            if(article != null){
+                article.nb += nb;
+            }else{
+                var feed = {id: id, titre: titre, nb: nb, price: price}
+                this.orderList.push(feed)
+            }
+            this.totalPrice += nb * price;
         }
-        this.totalPrice += nb * price;
     }
 
-    deleteArticle(id, nb){
+    deleteArticle(id){
         var article = this.orderList.find(article => article.id === id)
-        if(article.nb == nb){
-            this.orderList.splice(article)
-        }else{
-            article.nb -= nb;
-        }
+        var removeIndex = this.orderList.map(function(item) { return item.id; }).indexOf(id);
+
+        this.orderList.splice(removeIndex,1)
         this.totalPrice -= article.nb * article.price;
     }
 
