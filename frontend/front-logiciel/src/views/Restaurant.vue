@@ -8,7 +8,7 @@
         <div v-for="restaurant in listRestaurant" :key="restaurant._id">
           <b-card 
             v-bind:title=restaurant.titre
-            img-src="https://picsum.photos/600/300/?image=25"
+            :img-src=restaurant.picture
             img-alt="Image"
             img-top
             tag="article"
@@ -62,7 +62,11 @@ export default {
       this.user = this.user && JSON.parse(this.user)
       getRestaurant.getAllRestaurants().then( data => { this.listRestaurant = data})
       
-      this.order = JSON.parse(localStorage.getItem('order'));
+      if(localStorage.getItem('order') != null){
+        this.order.getLocalStorage(JSON.parse(localStorage.getItem('order')));
+      }else{
+        localStorage.setItem('order', JSON.stringify(this.order));
+      }
     }
   }
 };

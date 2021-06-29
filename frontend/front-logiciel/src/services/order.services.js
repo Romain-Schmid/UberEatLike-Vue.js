@@ -3,11 +3,14 @@ import axios from 'axios';
 const API_URL = 'https://cesi.elective.fradetaxel.fr/api/order';
 
 class OrderService {
-    createOrder(content, prix, id){
+    createOrder(content, prix, id, code_postale, ville, rue){
       return axios.post(API_URL + '/create', {
         content: content,
         prix: prix,
-        id_restaurant: id
+        id_restaurant: id,
+        code_postale: code_postale,
+        ville: ville,
+        rue: rue
       },{withCredentials: true})
       .then(res => {return res.data});
     }
@@ -23,9 +26,9 @@ class OrderService {
     }
 
     payOrder(id){
-      return axios.put(API_URL + '/paid/' + id ,{withCredentials: true})
+      return axios.put(API_URL + '/paid/' + id ,{},{withCredentials: true})
       .then(res => {return res.data});
-  }
+    }
 
 }
 

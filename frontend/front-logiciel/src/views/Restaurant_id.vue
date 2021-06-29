@@ -10,7 +10,7 @@
         <div v-for="menu in listMenus" :key="menu._id">
           <b-card 
             v-bind:title=menu.titre
-            img-src="https://picsum.photos/600/300/?image=25"
+            :img-src=menu.picture
             img-alt="Image"
             img-top
             tag="article"
@@ -37,7 +37,7 @@
         <div v-for="article in listArticles" :key="article._id">
           <b-card 
             v-bind:title=article.titre
-            img-src="https://picsum.photos/600/300/?image=25"
+            :img-src=article.picture
             img-alt="Image"
             img-top
             tag="article"
@@ -106,11 +106,11 @@ export default {
       getRestaurant.getMenus(this.$route.params.id).then( data => { this.listMenus = data})
       getRestaurant.getArticles(this.$route.params.id).then( data => { this.listArticles = data})
 
-      if(localStorage.getItem('order').rest_id != null){
-        console.log("Get currentOrder");
-        this.order = JSON.parse(localStorage.getItem('order'));
+      if(localStorage.getItem('order') != null){
+        this.order.getLocalStorage(JSON.parse(localStorage.getItem('order')));
+      }else{
+        localStorage.setItem('order', JSON.stringify(this.order));
       }
-
     }
   }
 };

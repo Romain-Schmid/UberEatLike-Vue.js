@@ -24,14 +24,12 @@ export default {
           this.$refs['cart'].show();
       },
       takeOrder(){
-        var feed = this.currentOrder.orderList.Object.id.join();
-        console.log(feed, this.currentOrder.totalPrice, this.currentOrder.rest_id);
-        //getOrder.createOrder(feed, this.currentOrder.totalPrice, this.currentOrder.rest_id);
-        //this.$refs['cart'].hide();
+        this.$refs['cart'].hide();
+        this.$router.push('/order');
       },
       deleteOrder(){
-          this.currentOrder.eraseOrder();
-          localStorage.setItem('order', JSON.stringify(this.currentOrder));
+        this.currentOrder.eraseOrder();
+        localStorage.setItem('order', JSON.stringify(this.currentOrder));
       }
   },
 };

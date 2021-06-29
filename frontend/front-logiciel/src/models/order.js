@@ -7,6 +7,13 @@ export default class Order {
         this.totalPrice = 0;
     }
 
+    getLocalStorage(jsonObject){
+        this.rest_id = jsonObject.rest_id;
+        this.rest_name = jsonObject.rest_name;
+        this.orderList = jsonObject.orderList;
+        this.totalPrice = jsonObject.totalPrice;
+    }
+
     setOrder(restaurant_id, name) {
         this.rest_id = restaurant_id;
         this.rest_name = name;
@@ -32,6 +39,13 @@ export default class Order {
             article.nb -= nb;
         }
         this.totalPrice -= article.nb * article.price;
+    }
+
+    test(){
+        this.rest_id = null;
+        this.rest_name = null;
+        this.orderList = [];
+        this.totalPrice = 0;
     }
 
     eraseOrder(){

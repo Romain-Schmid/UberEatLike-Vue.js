@@ -1,8 +1,21 @@
 <template>
   <div class="home">    
-
-    <cart-modal v-bind:currentOrder="this.order"/>
     
+    <div v-if="this.order.rest_id != null">
+      <p v-for="article in this.order.orderList" :key="article._id" >
+        {{article.titre}} x {{article.nb}} = {{article.price * article.nb}} €
+      </p>
+      <p>Total : {{this.order.totalPrice}} €</p>
+      <b-container fluid="sm">
+        <p>Address : <b-form-input v-model="rue" ></b-form-input></p>
+        <p>Postal code : <b-form-input v-model="code" ></b-form-input></p>
+        <p>City : <b-form-input v-model="city" ></b-form-input></p>
+        <b-button class="mt-3" variant="success" block @click="command()">Commander</b-button>
+        <b-button class="mt-3" variant="danger" block @click="cancel()">Delete All</b-button>
+      </b-container>
+    </div>
+
+
     <div v-if="listOrder.length != 0">
       
         <h1>En attente de Payement :</h1>
@@ -29,30 +42,53 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import User from '../models/user';
 import Order from '../models/order';
-import CartModal from '../components/CartModal.vue';
 import getOrder from '../services/order.services.js';
 
 export default {
   name: "Home",
-    components: {
-      CartModal,
-  },
+    components: {},
   data() {
     return {
       user: new User,
       order: new Order,
-      listOrder: []
+      listOrder: [],
+      addresse: [],
+      rue:"",
+      code:"",
+      city:""
     };
   },
   methods: {
     delOrder(id){
       getOrder.deleteOrder(id);
+      this.componentKey += 1;
     },
     pay(id){
       getOrder.payOrder(id);
+      this.componentKey += 1;
+    },
+    command(){
+      if(this.rue == "" || this.code =="" || this.city ==""){
+        alert("Informations are missing");
+      }else{
+        var feed ="";
+        this.order.orderList.forEach(element => {
+           for(var i =0; i < element.nb; i++){
+             feed += element.id + ","
+           }
+        })
+
+        getOrder.createOrder(feed, this.order.totalPrice, this.order.rest_id, this.code, this.city, this.rue);
+        this.order.eraseOrder();
+        localStorage.setItem('order', JSON.stringify(this.order));
+        this.componentKey += 1;
+      }
+    },
+    cancel(){
+      this.order.eraseOrder();
+      localStorage.setItem('order', JSON.stringify(this.order));
     }
   },
   computed: {
@@ -66,9 +102,13 @@ export default {
     }else{
       this.user = localStorage.getItem('user');
       this.user = this.user && JSON.parse(this.user);
-      this.order = JSON.parse(localStorage.getItem('order'));
 
-      getOrder.getOrder().then( data => { this.listOrder = data})
+      if(localStorage.getItem('order') != null){
+        this.order.getLocalStorage(JSON.parse(localStorage.getItem('order')));
+        getOrder.getOrder().then( data => { this.listOrder = data})
+      }else{
+        localStorage.setItem('order', JSON.stringify(this.order));
+      }
     }
   }
 };
