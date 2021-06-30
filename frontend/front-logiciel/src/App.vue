@@ -6,8 +6,7 @@
       <router-link to="/inscription">Inscription</router-link> |
       <router-link to="/restaurateur">Restaurateur</router-link> |
       <router-link to="/restaurant">Restaurants</router-link> | 
-      <router-link to="/order">Mes Commandes</router-link> | 
-      <router-link to="/delivery">Livreurs</router-link>
+      <router-link to="/order">Mes Commandes</router-link>
     </div>
 
   <div id="nav2">

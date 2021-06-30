@@ -30,6 +30,48 @@ class OrderService {
       .then(res => {return res.data});
     }
 
+    getAllOrderRestaurant(id){
+      return axios
+        .get(API_URL + "/" + id + "/getAll", { withCredentials: true })
+        .then((res) => {return res.data});
+    }
+
+    orderIsReady(id, orderId){
+      return axios
+        .put(API_URL + "/" + id + "/ready/" + orderId,{}, { withCredentials: true })
+        .then((res) => {return res.data});
+    }
+
+    getOrderready(){
+      return axios
+        .get(API_URL + "/getAll", { withCredentials: true })
+        .then((res) => {return res.data});
+    }
+
+    getMyOrder(){
+      return axios
+        .get(API_URL + "/getMine", { withCredentials: true })
+        .then((res) => {return res.data});
+    }
+
+    validateOrder(id){
+      return axios
+        .put(API_URL + "/valider/" + id, {}, { withCredentials: true })
+        .then((res) => {return res.data});
+    }
+
+    startOrder(id){
+      return axios
+        .put(API_URL + "/start/" + id, {}, { withCredentials: true })
+        .then((res) => {return res.data});
+    }
+
+    finishOrder(id){
+      return axios
+        .put(API_URL + "/finish/" + id, {}, { withCredentials: true })
+        .then((res) => {return res.data});
+    }
+
 }
 
 export default new OrderService();

@@ -1,41 +1,90 @@
 <template>
   <div class="home">    
 
-    <div v-if="this.order.rest_id != null">
-      <p v-for="article in this.order.orderList" :key="article._id" >
-        {{article.titre}} x {{article.nb}} = {{article.price * article.nb}} €
-      </p>
-      <p>Total : {{this.order.totalPrice}} €</p>
-      <b-container fluid="sm">
-        <p>Address : <b-form-input v-model="rue" ></b-form-input></p>
-        <p>Postal code : <b-form-input v-model="code" ></b-form-input></p>
-        <p>City : <b-form-input v-model="city" ></b-form-input></p>
-        <b-button class="mt-3" variant="success" block @click="command()">Commander</b-button>
-        <b-button class="mt-3" variant="danger" block @click="cancel()">Delete All</b-button>
-      </b-container>
+
+    <div v-if=' user.role == "Customer"'>
+      <div v-if="this.order.rest_id != null">
+        <p v-for="article in this.order.orderList" :key="article._id" >
+          {{article.titre}} x {{article.nb}} = {{article.price * article.nb}} €
+        </p>
+        <p>Total : {{this.order.totalPrice}} €</p>
+        <b-container fluid="sm">
+          <p>Address : <b-form-input v-model="rue" ></b-form-input></p>
+          <p>Postal code : <b-form-input v-model="code" ></b-form-input></p>
+          <p>City : <b-form-input v-model="city" ></b-form-input></p>
+          <b-button class="mt-3" variant="success" block @click="command()">Commander</b-button>
+          <b-button class="mt-3" variant="danger" block @click="cancel()">Delete All</b-button>
+        </b-container>
+      </div>
+
+      <div v-if="listOrder.length != 0">
+        
+          <h1>En attente de Payement :</h1>
+          <div v-for="o in listOrder" :key="o._id">
+            <div v-if='o.status == "unpaid"'>
+              <p>{{o._id}}  --- Prix : {{o.prix}} €
+                <b-button v-on:click="delOrder(o._id)" variant="danger"> Delete </b-button>
+                <b-button v-on:click="pay(o._id)" variant="success"> Pay </b-button>
+              </p>
+            </div>
+          </div>
+
+          <h1>En cours de livraison :</h1>
+          <div v-for="o in listOrder" :key="o._id">
+            <div v-if='o.status != "unpaid"'>
+              <p>Commande n° {{o._id}}  --- Prix : {{o.prix}} € --- Status : {{statusById[o._id]}} </p>
+            </div>
+          </div>
+      </div>
+      <div v-else> Vous n'avez pas encore passez de commandes.</div>
+
+    </div>
+    <div v-if='user.role == "Restorer"'>
+          <div v-for="restaurant in listRestaurant" :key="restaurant.id">
+
+            <h1>Restaurant : {{restaurant.titre}}</h1>
+            <h2>Commandes à réaliser :</h2>
+            <div v-for="commande in listOrder" :key="commande._id">
+              <div v-if='commande.status == "paid" && commande.id_restaurant._id == restaurant._id'>
+                <p>{{commande._id}} --- Prix : {{commande.prix}} €
+                  <b-button v-on:click="setReady(restaurant._id, commande._id)" variant="success"> Commande prête </b-button>
+                </p>
+              </div>
+            </div>
+
+            <h2>Commandes en attente de livreur :</h2>
+            <div v-for="commande in listOrder" :key="commande._id">
+              <div v-if='commande.status == "ready" && commande.id_restaurant._id == restaurant._id'>
+                <p>{{commande._id}} --- Prix : {{commande.prix}} €
+                </p>
+              </div>
+            </div>
+
+          </div>
+    </div>
+    <div v-if='user.role == "DeliveryMan"'>
+      <div v-if='myRun.length == 0' :key="myRun">
+        <h1>Courses disponibles :</h1>
+          <div v-for="commande in listOrder" :key="commande">
+              <div v-if='commande.status == "ready"'>
+                <p>Restaurant : {{commande.id_restaurant.titre}} --- Adresse : {{commande.rue}}, {{commande.ville}}
+                  <b-button v-on:click="setOrderStatus(commande._id, commande.status)" variant="success"> Prendre la commande </b-button>
+                </p>
+              </div>
+          </div>
+      </div>
+      <div v-else>
+        <h1>Ma livraison : </h1>
+        Adresse : {{myRun[0].rue}}, {{myRun[0].ville}} --- Status : {{myRun[0].status}}
+        <b-button v-on:click="setOrderStatus(myRun[0]._id, myRun[0].status)" variant="success">
+          <p v-if='myRun[0].status == "validate"'> Début de la course</p>
+          <p v-if='myRun[0].status == "start"'> Repas livré</p>
+        </b-button>
+      </div>
+          
     </div>
 
 
-    <div v-if="listOrder.length != 0">
-      
-        <h1>En attente de Payement :</h1>
-        <div v-for="o in listOrder" :key="o._id">
-          <div v-if='o.status == "unpaid"'>
-            <p>{{o._id}}  --- Prix : {{o.prix}} €
-              <b-button v-on:click="delOrder(o._id)" variant="danger"> Delete </b-button>
-              <b-button v-on:click="pay(o._id)" variant="success"> Pay </b-button>
-            </p>
-          </div>
-        </div>
-
-        <h1>En cours de livraison :</h1>
-        <div v-for="o in listOrder" :key="o._id">
-          <div v-if='o.status != "unpaid"'>
-            <p>Commande n° {{o._id}}  --- Prix : {{o.prix}} € --- Status : {{statusById[o._id]}} </p>
-          </div>
-        </div>
-    </div>
-    <div v-else> Vous n'avez pas encore passez de commandes.</div>
   </div>
   
 </template>
@@ -45,6 +94,7 @@ import User from '../models/user';
 import Order from '../models/order';
 import getOrder from '../services/order.services.js';
 import io from 'socket.io-client';
+import RestorerService from "../services/restaurateur.services";
 
 export default {
   name: "Home",
@@ -63,7 +113,9 @@ export default {
       code:"",
       city:"",
       message:"",
-      statusById:[]
+      statusById:[],
+      listRestaurant:[],
+      myRun:[]
     };
   },
   methods: {
@@ -73,6 +125,27 @@ export default {
     pay(id){
       getOrder.payOrder(id);
       this.socket.emit('OrderPaid',{message: "{id :"+id+ ", email:"+ this.user.email + ", role:"+ this.user.role +  "}"});
+    },
+    setReady(id, orderId){
+      getOrder.orderIsReady(id, orderId)
+      this.socket.emit('OrderReady',{message: "{id :"+orderId+ ", email:"+ this.user.email + ", role:"+ this.user.role +  "}"});
+      this.refreshOrders();
+    },
+    setOrderStatus(id, status){
+      if(status == "ready"){
+        getOrder.validateOrder(id);
+        this.socket.emit('OrderValidate',{message: "{id :"+id+ ", email:"+ this.user.email + ", role:"+ this.user.role +  "}"});
+        this.refreshMyLivraison()
+      }else if(status == "validate"){
+        getOrder.startOrder(id);
+        this.socket.emit('OrderStart',{message: "{id :"+id+ ", email:"+ this.user.email + ", role:"+ this.user.role +  "}"});
+        this.refreshMyLivraison()
+      }else if (status == "start"){
+        getOrder.finishOrder(id);
+        this.socket.emit('OrderFinish',{message: "{id :"+id+ ", email:"+ this.user.email + ", role:"+ this.user.role +  "}"});
+        this.myRun =[];
+        this.refreshLivraison();
+      }
     },
     command(){
       if(this.rue == "" || this.code =="" || this.city ==""){
@@ -93,6 +166,26 @@ export default {
     cancel(){
       this.order.eraseOrder();
       localStorage.setItem('order', JSON.stringify(this.order));
+    },
+    refreshOrders(){
+      RestorerService.getMine().then((data) => {  // Récupère les restaurants
+          this.listRestaurant = data;
+          this.listRestaurant.forEach( (resp) => {  //pour chaque restaurant        
+            getOrder.getAllOrderRestaurant(resp._id).then( (res) => { // je cherche les orders
+              this.listOrder = res  ;
+            })
+          })
+        })
+    },
+    refreshLivraison(){
+      getOrder.getOrderready().then((data) => {
+        this.listOrder = data;
+      })
+    },
+    refreshMyLivraison(){
+      getOrder.getMyOrder().then((data) => {
+        this.myRun = data;
+      })
     }
   },
   computed: {
@@ -112,37 +205,64 @@ export default {
       }else{
         localStorage.setItem('order', JSON.stringify(this.order));
       }
-
-      getOrder.getOrder().then( data => { 
-        this.listOrder = data;
-        this.listOrder.forEach(element => {
-          this.statusById[element._id] = element.status
-        });
-      });
-      
+     
       this.socket.on("connect_error", (err) => {
         console.log(`connect_error due to ${err.message}`);
       });
 
-      this.socket.on('OrderReady', (res) => {
-        var data = JSON.parse(res.message)
-        this.statusById[data.id] = data.status;
-      });
+      if(this.user.role == "Customer"){
 
-      this.socket.on('OrderValidate', (res) => {
-        var data = JSON.parse(res.message)
-        this.statusById[data.id] = data.status;
-      });
+        getOrder.getOrder().then( data => { 
+          this.listOrder = data;
+          this.listOrder.forEach(element => {
+            this.statusById[element._id] = element.status
+          });
+        });
 
-      this.socket.on('OrderStart', (res) => {
-        var data = JSON.parse(res.message)
-        this.statusById[data.id] = data.status;
-      });
+        this.socket.on('OrderIsReady', (res) => {
+          var data = JSON.parse(res.message)
+          this.statusById[data.id] = data.status;
+        });
 
-      this.socket.on('OrderFinish', (res) => {
-        var data = JSON.parse(res.message)
-        this.statusById[data.id] = data.status;
-      });
+        this.socket.on('OrderIsValidate', (res) => {
+          var data = JSON.parse(res.message)
+          this.statusById[data.id] = data.status;
+        });
+
+        this.socket.on('OrderIsStart', (res) => {
+          var data = JSON.parse(res.message)
+          this.statusById[data.id] = data.status;
+        });
+
+        this.socket.on('OrderIsFinish', (res) => {
+          var data = JSON.parse(res.message)
+          this.statusById[data.id] = data.status;
+        });
+
+      }else if(this.user.role == "Restorer"){
+        this.refreshOrders();
+        
+
+        this.socket.on('OrderIsPaid', () => {
+          this.refreshOrders();
+        });
+
+        this.socket.on('OrderIsValidate', () => {
+          this.refreshOrders();
+        });
+
+      }else if(this.user.role == "DeliveryMan"){
+          this.refreshMyLivraison()
+          if(this.myRun.length == 0){
+            this.refreshLivraison();
+          }
+
+          this.socket.on('OrderIsReady', () => {
+            if(this.myRun.length == 0){
+              this.refreshLivraison();
+            }
+        });
+      }
     }
   }
 };
