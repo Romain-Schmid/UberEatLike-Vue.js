@@ -1,6 +1,6 @@
 <template>
   <div class="home">    
-    
+
     <div v-if="this.order.rest_id != null">
       <p v-for="article in this.order.orderList" :key="article._id" >
         {{article.titre}} x {{article.nb}} = {{article.price * article.nb}} €
@@ -30,13 +30,12 @@
 
         <h1>En cours de livraison :</h1>
         <div v-for="o in listOrder" :key="o._id">
-          <div v-if='o.status == "paid"'>
-            <p>{{o._id}}  --- Prix : {{o.prix}} € </p>
+          <div v-if='o.status != "unpaid"'>
+            <p>Commande n° {{o._id}}  --- Prix : {{o.prix}} € --- Status : {{statusById[o._id]}} </p>
           </div>
         </div>
     </div>
     <div v-else> Vous n'avez pas encore passez de commandes.</div>
-
   </div>
   
 </template>
@@ -45,6 +44,7 @@
 import User from '../models/user';
 import Order from '../models/order';
 import getOrder from '../services/order.services.js';
+import io from 'socket.io-client';
 
 export default {
   name: "Home",
@@ -53,21 +53,26 @@ export default {
     return {
       user: new User,
       order: new Order,
+      socket : io('https://cesi.socket.fradetaxel.fr/', {
+        withCredentials: true, 
+        transports:["websocket","polling"]
+      }),
       listOrder: [],
       addresse: [],
       rue:"",
       code:"",
-      city:""
+      city:"",
+      message:"",
+      statusById:[]
     };
   },
   methods: {
     delOrder(id){
       getOrder.deleteOrder(id);
-      this.componentKey += 1;
     },
     pay(id){
       getOrder.payOrder(id);
-      this.componentKey += 1;
+      this.socket.emit('OrderPaid',{message: "{id :"+id+ ", email:"+ this.user.email + ", role:"+ this.user.role +  "}"});
     },
     command(){
       if(this.rue == "" || this.code =="" || this.city ==""){
@@ -83,7 +88,6 @@ export default {
         getOrder.createOrder(feed, this.order.totalPrice, this.order.rest_id, this.code, this.city, this.rue);
         this.order.eraseOrder();
         localStorage.setItem('order', JSON.stringify(this.order));
-        this.componentKey += 1;
       }
     },
     cancel(){
@@ -105,10 +109,40 @@ export default {
 
       if(localStorage.getItem('order') != null){
         this.order.getLocalStorage(JSON.parse(localStorage.getItem('order')));
-        getOrder.getOrder().then( data => { this.listOrder = data})
       }else{
         localStorage.setItem('order', JSON.stringify(this.order));
       }
+
+      getOrder.getOrder().then( data => { 
+        this.listOrder = data;
+        this.listOrder.forEach(element => {
+          this.statusById[element._id] = element.status
+        });
+      });
+      
+      this.socket.on("connect_error", (err) => {
+        console.log(`connect_error due to ${err.message}`);
+      });
+
+      this.socket.on('OrderReady', (res) => {
+        var data = JSON.parse(res.message)
+        this.statusById[data.id] = data.status;
+      });
+
+      this.socket.on('OrderValidate', (res) => {
+        var data = JSON.parse(res.message)
+        this.statusById[data.id] = data.status;
+      });
+
+      this.socket.on('OrderStart', (res) => {
+        var data = JSON.parse(res.message)
+        this.statusById[data.id] = data.status;
+      });
+
+      this.socket.on('OrderFinish', (res) => {
+        var data = JSON.parse(res.message)
+        this.statusById[data.id] = data.status;
+      });
     }
   }
 };

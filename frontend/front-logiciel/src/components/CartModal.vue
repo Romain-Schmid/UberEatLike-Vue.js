@@ -15,8 +15,6 @@
 </template>
 
 <script>
-//import getOrder from '../services/order.services.js';
-
 export default {
   name: "CartModal",
   props:['currentOrder'],
