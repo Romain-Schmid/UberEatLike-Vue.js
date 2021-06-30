@@ -3,7 +3,7 @@
     
     <div v-if="listOrder.length != 0">
       
-        <h1>En attente de Payement :</h1>
+        <h1>Livraison en attente d'un livreur :</h1>
         <div v-for="o in listOrder" :key="o._id">
           <div v-if='o.status == "unpaid"'>
             <p>{{o._id}}  --- Prix : {{o.prix}} €
@@ -13,7 +13,7 @@
           </div>
         </div>
 
-        <h1>En cours de livraison :</h1>
+        <h1>Vos livraison en attente:</h1>
         <div v-for="o in listOrder" :key="o._id">
           <div v-if='o.status == "paid"'>
             <p>{{o._id}}  --- Prix : {{o.prix}} € </p>
