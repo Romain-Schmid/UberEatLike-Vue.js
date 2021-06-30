@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <Sidebar />
     <h1>Choisissez votre restaurant</h1>
     <b-button
       class="button"
@@ -17,13 +16,11 @@
 <script>
 // @ is an alias to /src
 import User from "../models/user";
-import Sidebar from "../components/Sidebar.vue";
 import OwnRestaurant from "../components/OwnRestaurant.vue";
 
 export default {
   name: "Home",
   components: {
-    Sidebar,
     OwnRestaurant,
   },
   data() {

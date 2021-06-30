@@ -20,7 +20,7 @@
               v-bind:href="'/restaurateur/' + restaurant._id"
               variant="success"
             >
-              Choisire
+              Choisir
             </b-button>
             <b-button
               class="button"
