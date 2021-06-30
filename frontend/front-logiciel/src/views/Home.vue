@@ -1,24 +1,26 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ user.role }}</pre>
-    </b-card>
-    <b-button v-on:click="onLogout" variant="danger">Logout</b-button>
+    <img id="logo" alt="Vue logo" src="../assets/logo.png" />
+    <h1>ꟻAF</h1>
+    <h2>ꟻoodAsFast</h2>
+    <span class="center"
+      >Bienvenu sur notre application FoodAsFast
+    </span>
+    <span class="center"
+      >FoodAsFast vous permet en tant que client de trouver des restaurants près de chez vous,
+      en tant que restaurateur de proposer vos services au plus grand nombre et
+      pour les livreurs de se faire de l'argent aussi vite que vous livrez les commandes
+    </span>
+    <b-button id="button" v-on:click="onLogout" variant="danger">Logout</b-button>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
 import User from "../models/user";
 
 export default {
   name: "Home",
-  components: {
-    HelloWorld,
-  },
   data() {
     return {
       user: new User(),
@@ -40,7 +42,29 @@ export default {
   methods: {
     onLogout() {
       this.$store.dispatch("auth/logout", this.user);
+      this.$router.push("/connexion");
     },
   },
 };
 </script>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@600&display=swap');
+h1 {
+  font-family: 'Arimo', sans-serif;
+}
+
+h2 {
+  font-family: 'Arimo', sans-serif;
+}
+
+.center {
+  margin-left: 10px;
+  margin-right: 10px;
+  display: block;
+}
+
+#button {
+  margin-top: 5px;
+}
+</style>

@@ -5,8 +5,9 @@
       <router-link to="/connexion">Connexion</router-link> |
       <router-link to="/inscription">Inscription</router-link> |
       <router-link to="/restaurateur">Restaurateur</router-link> |
-      <router-link to="/restaurant">Restaurants</router-link> |
-      <router-link to="/order">Mes Commandes</router-link>
+      <router-link to="/restaurant">Restaurants</router-link> | 
+      <router-link to="/order">Mes Commandes</router-link> | 
+      <router-link to="/delivery">Livreurs</router-link>
     </div>
 
   <div id="nav2">
@@ -28,6 +29,7 @@
         <b-nav-item href="/restaurateur">Restaurateur</b-nav-item>
         <b-nav-item href="/restaurant">Restaurants</b-nav-item>
         <b-nav-item href="/order">Mes Commandes</b-nav-item>
+        <b-nav-item href="/delivery">Livreurs</b-nav-item>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
