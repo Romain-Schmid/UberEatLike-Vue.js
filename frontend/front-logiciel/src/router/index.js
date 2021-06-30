@@ -38,13 +38,31 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/Restaurateur.vue"),
   },
   {
-    path: "/client",
-    name: "Client",
+    path: "/restaurant",
+    name: "Restaurant",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Client.vue"),
+      import(/* webpackChunkName: "about" */ "../views/Restaurant.vue"),
+  },
+  {
+    path: "/restaurant/:id",
+    name: "Restaurant_id",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Restaurant_id.vue"),
+  },
+  {
+    path: "/order",
+    name: "order",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Order.vue"),
   },
   {
     path: "/createRestorer",

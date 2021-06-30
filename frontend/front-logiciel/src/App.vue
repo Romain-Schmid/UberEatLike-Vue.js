@@ -5,7 +5,8 @@
       <router-link to="/connexion">Connexion</router-link> |
       <router-link to="/inscription">Inscription</router-link> |
       <router-link to="/restaurateur">Restaurateur</router-link> |
-      <router-link to="/client">Client</router-link> |
+      <router-link to="/restaurant">Restaurants</router-link> |
+      <router-link to="/order">Mes Commandes</router-link>
     </div>
     <router-view />
   </div>
