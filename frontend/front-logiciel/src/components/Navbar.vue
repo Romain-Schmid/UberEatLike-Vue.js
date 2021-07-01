@@ -1,7 +1,7 @@
 <template>
   <div :key="user.role" id="navbar">
     <div id="nav">
-      <router-link to="/">Acceuil | </router-link>
+      <router-link to="/">Accueil | </router-link>
       <router-link to="/restaurateur" v-if="user.role == 'Restorer'"
         >Gestion Restaurants |
       </router-link>
@@ -24,7 +24,7 @@
 
         <b-collapse id="navbar-toggle-collapse" is-nav>
           <b-navbar-nav class="ml-auto">
-            <b-nav-item to="/">Acceuil</b-nav-item>
+            <b-nav-item to="/">Accueil</b-nav-item>
             <b-nav-item to="/restaurateur" v-if="user.role == 'Restorer'"
               >Gestion Restaurants</b-nav-item
             >
