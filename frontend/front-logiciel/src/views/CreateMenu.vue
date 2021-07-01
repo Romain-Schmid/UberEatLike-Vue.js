@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <Navbar v-bind:user="this.user" />
     <h1>Création d'un Menu</h1>
     <span class="center"
       >Merci de remplire ce formulaire pour la création d'un menu de votre
@@ -100,11 +101,13 @@ import User from "../models/user";
 import RestorerService from "../services/restaurateur.services";
 import Order from "../models/order";
 import CartModal from "../components/CartModalRestorer.vue";
+import Navbar from "../components/Navbar.vue";
 
 export default {
   name: "Home",
   components: {
     CartModal,
+    Navbar,
   },
   data() {
     return {

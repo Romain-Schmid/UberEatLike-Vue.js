@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <Navbar v-bind:user="this.user" />
     <h1>Modification d'un Menu</h1>
     <span class="center"
       >Merci de remplire ce formulaire pour la modification d'un menu de votre
@@ -98,6 +99,7 @@
 <script>
 // @ is an alias to /src
 import User from "../models/user";
+import Navbar from "../components/Navbar.vue";
 import RestorerService from "../services/restaurateur.services";
 import Order from "../models/order";
 import CartModal from "../components/CartModalRestorer.vue";
@@ -106,6 +108,7 @@ export default {
   name: "Home",
   components: {
     CartModal,
+    Navbar,
   },
   data() {
     return {

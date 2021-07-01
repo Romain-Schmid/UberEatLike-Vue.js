@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Navbar v-bind:user="this.user" />
     <b-container>
       <h1>Connexion</h1>
       <p>
@@ -52,10 +53,14 @@
 
 <script>
 import User from "../models/user.js";
+import Navbar from "../components/Navbar.vue";
 //import authHeader from '../services/auth-header';
 
 export default {
   name: "Login",
+  components: {
+    Navbar,
+  },
   data() {
     return {
       user: new User("", ""),
@@ -79,7 +84,7 @@ export default {
         (data) => {
           this.message = data.message;
           this.successful = true;
-          alert(JSON.stringify(this.message));
+          this.$router.push("/");
         },
         (error) => {
           this.loading = false;

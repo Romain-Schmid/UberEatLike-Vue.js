@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Navbar v-bind:user="this.user" />
     <b-container>
       <h1>Inscription</h1>
     </b-container>
@@ -56,8 +57,12 @@
 
 <script>
 import User from "../models/user";
+import Navbar from "../components/Navbar.vue";
 
 export default {
+  components: {
+    Navbar,
+  },
   data() {
     return {
       user: new User("", "", ""),

@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <Navbar v-bind:user="this.user" />
     <h1>Choisissez votre restaurant</h1>
     <b-button
       class="button"
@@ -16,12 +17,14 @@
 <script>
 // @ is an alias to /src
 import User from "../models/user";
+import Navbar from "../components/Navbar.vue";
 import OwnRestaurant from "../components/OwnRestaurant.vue";
 
 export default {
   name: "Home",
   components: {
     OwnRestaurant,
+    Navbar,
   },
   data() {
     return {

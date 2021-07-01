@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <Navbar v-bind:user="this.user" />
     <h1>Création de votre restaurant</h1>
     <span class="center"
       >Merci de rejoindre notre application *** qui regroupe de nombreux
@@ -143,9 +144,13 @@
 <script>
 // @ is an alias to /src
 import User from "../models/user";
+import Navbar from "../components/Navbar.vue";
 
 export default {
   name: "Home",
+  components: {
+    Navbar,
+  },
   data() {
     return {
       user: new User(),

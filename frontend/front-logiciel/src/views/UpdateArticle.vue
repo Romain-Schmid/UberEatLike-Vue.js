@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <Navbar v-bind:user="this.user" />
     <h1>Modification d'un article</h1>
     <span class="center"
       >Merci de remplire ce formulaire pour la modificatiob d'un article de
@@ -90,10 +91,14 @@
 <script>
 // @ is an alias to /src
 import User from "../models/user";
+import Navbar from "../components/Navbar.vue";
 import RestorerService from "../services/restaurateur.services";
 
 export default {
   name: "Home",
+  components: {
+    Navbar,
+  },
   data() {
     return {
       user: new User(),
