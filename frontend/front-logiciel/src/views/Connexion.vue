@@ -42,12 +42,8 @@
         >
       </b-form-select>
 
-      <b-button type="submit" variant="primary">Submit</b-button>
-      <b-button type="button" variant="danger">Reset</b-button>
+      <b-button type="submit" variant="success">Connexion</b-button>
     </b-form>
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ user }}</pre>
-    </b-card>
   </div>
 </template>
 
@@ -94,18 +90,6 @@ export default {
             error.toString();
         }
       );
-    },
-    onReset(event) {
-      event.preventDefault();
-      // Reset our form values
-      this.user.email = "";
-      this.user.password = "";
-      this.user.role = "";
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
     },
   },
 };
