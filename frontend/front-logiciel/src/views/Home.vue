@@ -4,7 +4,7 @@
     <img id="logo" alt="Vue logo" src="../assets/logo.png" />
     <h1>ꟻAF</h1>
     <h2>ꟻoodAsFast</h2>
-    <span class="center">Bienvenu sur notre application FoodAsFast </span>
+    <span class="center">Bienvenue sur notre application FoodAsFast </span>
     <span class="center"
       >FoodAsFast vous permet en tant que client de trouver des restaurants près
       de chez vous, en tant que restaurateur de proposer vos services au plus

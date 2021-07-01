@@ -3,14 +3,14 @@
     <Navbar v-bind:user="this.user" />
     <h1>Création d'un Menu</h1>
     <span class="center"
-      >Merci de remplire ce formulaire pour la création d'un menu de votre
-      réstaurant
+      >Merci de remplir ce formulaire pour la création d'un menu de votre
+      restaurant
     </span>
     <span class="center"
-      >Une image standars sera autaumatiquemment placé pour le menu
+      >Une image standard sera automatiquemment placé pour le menu
     </span>
     <span class="center"
-      >Veuillez remplire le "panier" avec les articles de votre menu
+      >Veuillez remplir le panier avec les articles de votre menu
     </span>
     <b-form id="form" @submit="onSubmit" v-if="show">
       <b-form-group

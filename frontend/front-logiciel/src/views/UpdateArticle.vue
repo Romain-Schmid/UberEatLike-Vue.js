@@ -3,12 +3,11 @@
     <Navbar v-bind:user="this.user" />
     <h1>Modification d'un article</h1>
     <span class="center"
-      >Merci de remplire ce formulaire pour la modificatiob d'un article de
-      votre réstaurant
+      >Merci de remplir ce formulaire pour la modification d'un article de
+      votre restaurant
     </span>
     <span class="center"
-      >Une image standars sera autaumatiquemment placé en fonction du type
-      d'image selectionner
+      >Une image standard sera automatiquemment placé en fonction du type d'article.
     </span>
     <b-form id="form" @submit="onSubmit" v-if="show">
       <b-form-group

@@ -3,16 +3,16 @@
     <Navbar v-bind:user="this.user" />
     <h1>Création de votre restaurant</h1>
     <span class="center"
-      >Merci de rejoindre notre application *** qui regroupe de nombreux
+      >Merci de rejoindre notre application FoodAsFast qui regroupe de nombreux
       restaurateurs comme vous !
     </span>
     <span class="center"
-      >Pour continuer votre inscription veullier remplir le formulaire
+      >Pour continuer votre inscription veuillez remplir le formulaire
       ci-dessous qui contiendra les informations de votre restaurant.</span
     >
     <span class="center"
       >Vous pourrez à tout moment modifier ces informations dans votre compte ne
-      vous inquiètent pas :)</span
+      vous inquiètez pas !</span
     >
 
     <b-form id="form" @submit="onSubmit" v-if="show">
@@ -64,7 +64,7 @@
       <b-card bg-variant="light">
         <b-form-group
           label-cols-lg="3"
-          label="Addresse du restaurant"
+          label="Adresse du restaurant"
           label-size="lg"
           label-class="font-weight-bold pt-0"
           class="mb-0"
@@ -98,7 +98,7 @@
           </b-form-group>
 
           <b-form-group
-            label="Code Postale :"
+            label="Code Postal :"
             label-for="nested-code_postale"
             label-cols-sm="3"
             label-align-sm="right"
@@ -131,7 +131,7 @@
         id="input-group-5"
         label="Note du restaurant :"
         label-for="input-5"
-        description="La note changera avec les notes données par les clients"
+        description="Comment avez-vous appréciez le formulaire ?"
       >
         <b-form-rating variant="success" v-model="form.note"></b-form-rating>
       </b-form-group>

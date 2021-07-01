@@ -8,7 +8,7 @@
       <b-form @submit="onSubmit" v-if="show">
         <b-form-group
           id="input-group-1"
-          label="Email address:"
+          label="Adresse E-mail :"
           label-for="input-1"
         >
           <b-form-input
@@ -38,7 +38,7 @@
 
         <b-form-select v-model="user.role" required class="mb-3">
           <b-form-select-option :value="null"
-            >Please select an option</b-form-select-option
+            >Veuillez sélectionner votre rôle</b-form-select-option
           >
           <b-form-select-option value="Customer">Client</b-form-select-option>
           <b-form-select-option value="DeliveryMan"
@@ -49,7 +49,7 @@
           >
         </b-form-select>
 
-        <b-button type="submit" variant="success">submit</b-button>
+        <b-button type="submit" variant="success">Inscription</b-button>
       </b-form>
     </div>
   </div>
@@ -98,6 +98,38 @@ export default {
                 this.message = data.message;
                 this.successful = true;
                 this.$router.push("/createRestorer");
+              },
+              (error) => {
+                this.loading = false;
+                this.message =
+                  (error.response && error.response.data) ||
+                  error.message ||
+                  error.toString();
+              }
+            );
+          }
+          if (this.user.role == "Customer") {
+            this.$store.dispatch("auth/login", this.user).then(
+              (data) => {
+                this.message = data.message;
+                this.successful = true;
+                this.$router.push("/");
+              },
+              (error) => {
+                this.loading = false;
+                this.message =
+                  (error.response && error.response.data) ||
+                  error.message ||
+                  error.toString();
+              }
+            );
+          }
+          if (this.user.role == "DeliveryMan") {
+            this.$store.dispatch("auth/login", this.user).then(
+              (data) => {
+                this.message = data.message;
+                this.successful = true;
+                this.$router.push("/");
               },
               (error) => {
                 this.loading = false;

@@ -8,7 +8,7 @@
       v-bind:href="'/restaurateur/' + this.$route.params.id + '/createMenu'"
       variant="success"
     >
-      Créez un Menu
+      Créer un Menu
     </b-button>
     <div class="list">
       <b-card-group deck>
@@ -48,7 +48,7 @@
       v-bind:href="'/restaurateur/' + this.$route.params.id + '/createArticle'"
       variant="success"
     >
-      Créez un artcile
+      Créer un article
     </b-button>
     <div class="list">
       <b-card-group deck>

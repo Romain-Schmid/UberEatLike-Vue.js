@@ -5,7 +5,7 @@
       <b-container>
         <h1>Connexion</h1>
         <p>
-          Tu n'a pas encore de compte ?
+          Tu n'as pas encore de compte ?
           <router-link to="/inscription">Créer un compte</router-link>
         </p>
       </b-container>
@@ -34,7 +34,7 @@
 
         <b-form-select v-model="user.role" required class="mb-3">
           <b-form-select-option :value="null"
-            >Please select an option</b-form-select-option
+            >Veuillez sélectionner votre rôle</b-form-select-option
           >
           <b-form-select-option value="Customer">Client</b-form-select-option>
           <b-form-select-option value="DeliveryMan"

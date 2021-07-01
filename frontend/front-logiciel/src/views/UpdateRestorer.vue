@@ -3,7 +3,7 @@
     <Navbar v-bind:user="this.user" />
     <h1>Mise à jours de votre restaurant</h1>
     <span class="center"
-      >Veuillez modifier les valeurs du formulaire pour mettre a jours votre
+      >Veuillez modifier les valeurs du formulaire pour mettre à jour votre
       restaurant.
     </span>
     <b-form id="form" @submit="onSubmit" v-if="show">
@@ -55,7 +55,7 @@
       <b-card bg-variant="light">
         <b-form-group
           label-cols-lg="3"
-          label="Addresse du restaurant"
+          label="Adresse du restaurant"
           label-size="lg"
           label-class="font-weight-bold pt-0"
           class="mb-0"
@@ -89,7 +89,7 @@
           </b-form-group>
 
           <b-form-group
-            label="Code Postale :"
+            label="Code Postal :"
             label-for="nested-code_postale"
             label-cols-sm="3"
             label-align-sm="right"

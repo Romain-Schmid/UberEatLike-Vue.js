@@ -10,28 +10,28 @@
         <p>Total : {{ this.order.totalPrice }} €</p>
         <b-container fluid="sm">
           <p>Adresse : <b-form-input v-model="rue"></b-form-input></p>
-          <p>Postal code : <b-form-input v-model="code"></b-form-input></p>
-          <p>City : <b-form-input v-model="city"></b-form-input></p>
+          <p>Code Postal: <b-form-input v-model="code"></b-form-input></p>
+          <p>Ville : <b-form-input v-model="city"></b-form-input></p>
           <b-button class="mt-3" variant="success" block @click="command()"
             >Commander</b-button
           >
           <b-button class="mt-3" variant="danger" block @click="cancel()"
-            >Delete All</b-button
+            >Supprimer tout</b-button
           >
         </b-container>
       </div>
 
       <div class="borderre" v-if="listOrder.length != 0">
-        <h1>En attente de Payement :</h1>
+        <h1>En attente de paiement :</h1>
         <div v-for="o in listOrder" :key="o._id">
           <div v-if="o.status == 'unpaid'">
             <p>
               {{ o._id }} --- Prix : {{ o.prix }} €
               <b-button v-on:click="delOrder(o._id)" variant="danger">
-                Delete
+                Supprimer
               </b-button>
               <b-button v-on:click="pay(o._id)" variant="success">
-                Pay
+                Payer
               </b-button>
             </p>
           </div>
@@ -48,7 +48,7 @@
         </div>
       </div>
       <div class="borderre" v-else>
-        Vous n'avez pas encore passez de commandes.
+        Vous n'avez pas encore passez de commande.
       </div>
     </div>
     <div v-if="user.role == 'Restorer'">

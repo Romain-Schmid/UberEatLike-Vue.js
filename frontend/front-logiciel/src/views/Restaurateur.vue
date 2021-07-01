@@ -8,7 +8,7 @@
       v-bind:href="'/createRestorer'"
       variant="success"
     >
-      Créez un restaurant
+      Créer un restaurant
     </b-button>
     <OwnRestaurant />
   </div>
