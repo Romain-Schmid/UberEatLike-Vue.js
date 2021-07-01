@@ -5,7 +5,7 @@
       <b-container>
         <h1>Inscription</h1>
       </b-container>
-      <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+      <b-form @submit="onSubmit" v-if="show">
         <b-form-group
           id="input-group-1"
           label="Email address:"

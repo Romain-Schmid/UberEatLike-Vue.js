@@ -9,7 +9,7 @@
           <router-link to="/inscription">Créer un compte</router-link>
         </p>
       </b-container>
-      <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+      <b-form @submit="onSubmit" v-if="show">
         <b-form-group
           id="input-group-1"
           label="Email address:"
@@ -63,7 +63,7 @@ export default {
   },
   data() {
     return {
-      user: new User("", ""),
+      user: new User("", "", "", ""),
       show: true,
     };
   },
