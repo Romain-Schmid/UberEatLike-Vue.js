@@ -30,8 +30,10 @@ exports.findOne = (req : any, res : any) => {
 };
 
 exports.update = async (req : any, res : any) => {
+  const data = req.body;
+  data.article = data.article.split(",")
   Menu.findOneAndUpdate({_id : req.params.id_menu, id_restaurant : req.params.id_rest},
-     req.body)
+    data)
     .then((num: any) => {
         if (num == null) {
           res.status(400).send({

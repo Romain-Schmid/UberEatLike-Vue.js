@@ -78,9 +78,22 @@ exports.findOne = (req : any, res : any) => {
     });
 };
 
-exports.getMyDelivery = (req : any, res : any) => {
+exports.getMyAllDelivery = (req : any, res : any) => {
 
   Order.find({email_delivery : req.email })
+    .then((data : any) => {
+      res.send(data);
+    })
+    .catch((err: any) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Order."
+      });
+    });
+};
+
+exports.getMyDelivery = (req : any, res : any) => {
+  Order.find({email_delivery : req.email, status : { $ne : "finish"} })
     .then((data : any) => {
       res.send(data);
     })
@@ -134,7 +147,7 @@ exports.ready = (req : any, res : any) => {
 
 exports.validate = (req : any, res : any) => {
   Order.findOneAndUpdate({ _id : req.params.id_order, status : "ready", email_delivery : null}, 
-    {email_delivery : req.email},  {new : true})
+    {email_delivery : req.email, status : "validate"},  {new : true})
     .then((num: any) => {
       if (num == null) {
         res.status(400).send("You can't validate this order, maybe someone has already took it");
@@ -145,8 +158,8 @@ exports.validate = (req : any, res : any) => {
 };
 
 exports.startDelivery = (req : any, res : any) => {
-  Order.findOneAndUpdate({ _id : req.params.id_order, status : "ready"}, 
-    {status : "pending"},  {new : true})
+  Order.findOneAndUpdate({ _id : req.params.id_order, status : "validate"}, 
+    {status : "start"},  {new : true})
     .then((num: any) => {
       if (num == null) {
         res.status(400).send("You can't start the delivery until the food isn't ready");
@@ -157,7 +170,7 @@ exports.startDelivery = (req : any, res : any) => {
 };
 
 exports.finishDelivery = (req : any, res : any) => {
-  Order.findOneAndUpdate({ _id : req.params.id_order, status : "pending"}, 
+  Order.findOneAndUpdate({ _id : req.params.id_order, status : "start"}, 
     {status : "finish"},  {new : true})
     .then((num: any) => {
       if (num == null) {
@@ -183,3 +196,75 @@ exports.delete = async (req : any, res : any) => {
     }})
 .catch((error : any) => res.status(400).json("Cannot delete"));
 }
+
+
+exports.paidSocket = (id_order : string) => {
+  console.log(id_order)
+  Order.findOneAndUpdate({_id : id_order, status : "unpaid"},
+    {status : "paid"}, {new : true})
+    .then((num: any) => {
+        if (num == null) {
+          return false;
+        } else {
+          return true;
+        }})
+    .catch((error : any) => {
+      return false
+    });
+};
+
+exports.readySocket = (id_order : string) => {
+  Order.findOneAndUpdate({_id : id_order, status : "paid"},
+    {status : "ready"}, {new : true})
+    .then((num: any) => {
+        if (num == null) {
+          return false;
+        } else {
+          return true;
+        }})
+    .catch((error : any) => {
+      return error
+    });
+};
+
+exports.validateSocket = (id_order : string, email_delivery : string) => {
+  Order.findOneAndUpdate({ _id : id_order, status : "ready", email_delivery : null}, 
+    {email_delivery : email_delivery, status : "validate"},  {new : true})
+    .then((num: any) => {
+      if (num == null) {
+        return false;
+      } else {
+        return true;
+      }})
+      .catch((error : any) => {
+        return error
+      });
+};
+
+exports.startDeliverySocket = (id_order : string, email_delivery : string) => {
+  Order.findOneAndUpdate({ _id : id_order, status : "validate", email_delivery, }, 
+    {status : "start"},  {new : true})
+    .then((num: any) => {
+      if (num == null) {
+        return false;
+      } else {
+        return true;
+      }})
+      .catch((error : any) => {
+        return error
+      });
+};
+
+exports.finishDeliverySocket = (id_order : string) => {
+  Order.findOneAndUpdate({ _id : id_order, status : "start"}, 
+    {status : "finish"},  {new : true})
+    .then((num: any) => {
+      if (num == null) {
+        return false;
+      } else {
+        return true;
+      }})
+    .catch((error : any) => {
+        return error
+      });
+};

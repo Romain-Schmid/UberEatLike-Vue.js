@@ -14,9 +14,23 @@ var jwt = require('jsonwebtoken');
 const db_sql = require("./models");
 const User = db_sql.model.User;
 var cors = require('cors')
+const app = express();
+const appId = process.env.APPID;
+
+// const server = require('http').Server(app)
+// const io = require('socket.io')(server, {
+//   cors: {
+//     origin: ["https://cesi.elective.dev.fradetaxel.fr","https://cesi.socket.fradetaxel.fr"],
+//     methods: ["GET", "POST"],
+//     transports: ['websocket', 'polling'],
+//     credentials: true
+// },
+// allowEIO3: true
+// });
+
 
 var corsOptions = {
-  origin: ['http://78.123.229.253:443', 'http://localhost:8080', 'http://localhost:8081', 'https://cesi.elective.dev.fradetaxel.fr'],
+  origin: ['http://78.123.229.253:443', 'http://localhost:8080', 'http://localhost:8081', 'https://cesi.elective.dev.fradetaxel.fr', 'https://cesi.socket.fradetaxel.fr'],
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials : true
@@ -51,8 +65,7 @@ mongoose.connect('mongodb://fradetaxel.fr:2717/test', {useNewUrlParser: true, us
 
 
 //Create App with options
-const app = express();
-const appId = process.env.APPID;
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -147,15 +160,6 @@ app.use('/api/restaurant',secure, restaurantRouter);
 app.use('/api/sponsor',secure, sponsorRouter);
 app.use('/api/stats',secure, statsRouter);
 
-const server = require('http').Server(app)
-const io = require('socket.io')(server)
 
-io.on('connection', (socket : any) => {
-  socket.on('chat message', (msg : any) => {
-    io.emit('chat message', msg);
-  });
-});
-
-
-
-export default server;
+// export {server, io};
+export {app};

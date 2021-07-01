@@ -1,4 +1,5 @@
 import { Router } from 'express'
+// import {io} from '../app';
 
 const controllerOrder = require('../controllers/controllerOrder.ts')
 var router = Router();
@@ -59,7 +60,78 @@ router.get("/get/:id_order", controllerOrder.findOne)
 
 router.post("/create", secureCustomer, controllerOrder.create)
 
+//API
 router.put("/paid/:id_order", secureCustomer, controllerOrder.paid)
+//OR with socket
+
+
+// io.on('connection', function(socket: any) {
+//     console.log(socket.id)
+//     console.log("quelqu'un se connecte")
+
+//     var role = String;
+//     var email = String;
+//     var id_order = String;
+
+//     socket.on('OrderPaid',  (msg : any) => {
+//         console.log("OrderPaid")
+//         role = msg.role;
+//         email = msg.email;
+//         id_order = msg.id
+        
+//         console.log('le socket va etre emi')
+//         socket.emit('OrderIsPaid', {
+//             "id" : id_order,
+//             "status" : "paid"
+//         });
+//         console.log('le socket est emi')
+
+//     });
+//     socket.on('OrderReady', (msg : any) => {
+//         console.log('OrderReady')
+//         role = msg.role;
+//         email = msg.email;
+//         id_order = msg.id
+
+//         socket.emit('OrderIsReady', {
+//             "id" : id_order,
+//             "status" : "ready"
+//         });
+        
+//     });
+//     socket.on('OrderValidate', (msg : any) => {
+//         console.log('OrderValidate')
+//         role = msg.role;
+//         email = msg.email;
+//         id_order = msg.id
+
+//         socket.emit('OrderIsValidate', "yo");
+        
+//     });
+//     socket.on('OrderStart', (msg : any) => {
+//         console.log('OrderStart')
+//         role = msg.role;
+//         email = msg.email;
+//         id_order = msg.id
+
+//         socket.emit('OrderIsStart', {
+//             id : id_order,
+//             status : "start"
+//         });
+    
+//     });
+//     socket.on('OrderFinish', (msg : any) => {
+//         console.log('OrderFinish')
+//         role = msg.role;
+//         email = msg.email;
+//         id_order = msg.id
+//         socket.emit('OrderIsFinish', {
+//             "id" : id_order,
+//             "status" : "finish"
+//         });
+        
+//     });
+//   });
 
 router.put("/update/:id_order", secureCustomer, controllerOrder.update)
 
@@ -73,6 +145,7 @@ router.put('/:id_rest/ready/:id_order', secureOwner, controllerOrder.ready)
 //DeliveryMan
 router.put('/valider/:id_order', secureDeliveryMan, controllerOrder.validate)
 router.get('/getMine', secureDeliveryMan, controllerOrder.getMyDelivery)
+router.get('/getAllMine', secureDeliveryMan, controllerOrder.getMyAllDelivery)
 router.put('/start/:id_order', secureDeliveryMan, controllerOrder.startDelivery)
 router.put('/finish/:id_order', secureDeliveryMan, controllerOrder.finishDelivery)
 

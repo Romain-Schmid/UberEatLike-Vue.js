@@ -21,7 +21,6 @@ var secureRole = async function (req : any, res : any, next : any) {
 var secureOwner = async function (req : any, res : any, next : any) {
     const user = req.email;
     const id = req.params.id_rest
-    console.log(id)
     Restaurant.findById(id)
     .then((data : any) => {
         if( user != data.owner){
