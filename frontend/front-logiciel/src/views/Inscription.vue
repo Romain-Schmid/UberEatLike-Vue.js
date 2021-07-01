@@ -65,7 +65,7 @@ export default {
   },
   data() {
     return {
-      user: new User("", "", ""),
+      user: new User("", "", "", null),
       submitted: false,
       successful: false,
       show: true,
