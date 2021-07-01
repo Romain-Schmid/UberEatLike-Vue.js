@@ -1,53 +1,57 @@
 <template>
-  <div class="container">
+  <div>
     <Navbar v-bind:user="this.user" />
-    <b-container>
-      <h1>Inscription</h1>
-    </b-container>
-    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-      <b-form-group
-        id="input-group-1"
-        label="Email address:"
-        label-for="input-1"
-      >
-        <b-form-input
-          id="input-1"
-          v-model="user.email"
-          type="email"
-          placeholder="Entrer votre email"
-          required
-        ></b-form-input>
-
-        <b-form-input
-          id="input-2"
-          v-model="user.password"
-          type="password"
-          placeholder="Entrer Mot de passe"
-          aria-describedby="password-help-block"
-          required
-        ></b-form-input>
-
-        <b-form-input
-          id="input-3"
-          v-model="user.username"
-          placeholder="Entrer nom d'utilisateur"
-          required
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-select v-model="user.role" required class="mb-3">
-        <b-form-select-option :value="null"
-          >Please select an option</b-form-select-option
+    <div class="container">
+      <b-container>
+        <h1>Inscription</h1>
+      </b-container>
+      <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+        <b-form-group
+          id="input-group-1"
+          label="Email address:"
+          label-for="input-1"
         >
-        <b-form-select-option value="Customer">Client</b-form-select-option>
-        <b-form-select-option value="DeliveryMan">Livreur</b-form-select-option>
-        <b-form-select-option value="Restorer"
-          >Restaurateur</b-form-select-option
-        >
-      </b-form-select>
+          <b-form-input
+            id="input-1"
+            v-model="user.email"
+            type="email"
+            placeholder="Entrer votre email"
+            required
+          ></b-form-input>
 
-      <b-button type="submit" variant="success">submit</b-button>
-    </b-form>
+          <b-form-input
+            id="input-2"
+            v-model="user.password"
+            type="password"
+            placeholder="Entrer Mot de passe"
+            aria-describedby="password-help-block"
+            required
+          ></b-form-input>
+
+          <b-form-input
+            id="input-3"
+            v-model="user.username"
+            placeholder="Entrer nom d'utilisateur"
+            required
+          ></b-form-input>
+        </b-form-group>
+
+        <b-form-select v-model="user.role" required class="mb-3">
+          <b-form-select-option :value="null"
+            >Please select an option</b-form-select-option
+          >
+          <b-form-select-option value="Customer">Client</b-form-select-option>
+          <b-form-select-option value="DeliveryMan"
+            >Livreur</b-form-select-option
+          >
+          <b-form-select-option value="Restorer"
+            >Restaurateur</b-form-select-option
+          >
+        </b-form-select>
+
+        <b-button type="submit" variant="success">submit</b-button>
+      </b-form>
+    </div>
   </div>
 </template>
 
